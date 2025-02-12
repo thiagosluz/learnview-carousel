@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createProfessor, updateProfessor, fetchProfessor } from '@/services/api';
+import { createProfessor, updateProfessor, fetchProfessor } from '@/services';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
