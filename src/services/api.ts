@@ -1,5 +1,5 @@
 
-import { supabase } from '@/integrations/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Class, NewsItem, Professor } from '@/types';
 
 export async function fetchTodayClasses(): Promise<Class[]> {
