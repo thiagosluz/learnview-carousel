@@ -9,25 +9,26 @@ interface ClassScheduleProps {
 }
 
 const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
-  const [currentClass, setCurrentClass] = useState<number | null>(null);
+  const [currentClasses, setCurrentClasses] = useState<number[]>([]);
 
   useEffect(() => {
-    const getCurrentClass = () => {
+    const getCurrentClasses = () => {
       const now = new Date();
       const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now
         .getMinutes()
         .toString()
         .padStart(2, '0')}`;
 
-      const currentIndex = classes.findIndex((classItem) => {
-        return currentTime >= classItem.start_time && currentTime <= classItem.end_time;
-      });
+      const currentIndexes = classes
+        .map((classItem, index) => ({index, item: classItem}))
+        .filter(({item}) => currentTime >= item.start_time && currentTime <= item.end_time)
+        .map(({index}) => index);
 
-      setCurrentClass(currentIndex);
+      setCurrentClasses(currentIndexes);
     };
 
-    getCurrentClass();
-    const interval = setInterval(getCurrentClass, 60000); // Update every minute
+    getCurrentClasses();
+    const interval = setInterval(getCurrentClasses, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, [classes]);
@@ -51,7 +52,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
           <div
             key={classItem.id}
             className={`p-3 lg:p-4 rounded-xl transition-all duration-300 ${
-              currentClass === index
+              currentClasses.includes(index)
                 ? 'bg-primary text-white scale-[1.02] shadow-lg'
                 : 'bg-white hover:bg-secondary/20'
             }`}
@@ -61,8 +62,8 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                 <img
                   src={classItem.professor.photo_url}
                   alt={classItem.professor.name}
-                  className={`w-12 h-12 rounded-full object-cover border-2 shadow-md ${
-                    currentClass === index ? 'border-white' : 'border-primary/20'
+                  className={`w-14 h-14 rounded-full object-cover border-2 shadow-md ${
+                    currentClasses.includes(index) ? 'border-white' : 'border-primary/20'
                   }`}
                 />
               </div>
