@@ -25,8 +25,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { createNews, updateNews, fetchNews } from '@/services/api';
+import { createNews, updateNews, fetchNews } from '@/services';
 
+// Definindo o schema e tipo para o formulário
 const formSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório'),
   type: z.enum(['text', 'image'], {
@@ -37,6 +38,7 @@ const formSchema = z.object({
   active: z.boolean().default(true),
 });
 
+// Tipo inferido do schema
 type FormData = z.infer<typeof formSchema>;
 
 const NewsForm = () => {
@@ -66,7 +68,7 @@ const NewsForm = () => {
             content: news.content,
             duration: news.duration,
             active: news.active ?? true,
-          } as FormData);
+          });
         } catch (error) {
           toast({
             variant: "destructive",
@@ -83,13 +85,25 @@ const NewsForm = () => {
   const onSubmit = async (data: FormData) => {
     try {
       if (id) {
-        await updateNews(id, data);
+        await updateNews(id, {
+          title: data.title,
+          type: data.type,
+          content: data.content,
+          duration: data.duration,
+          active: data.active,
+        });
         toast({
           title: "Notícia atualizada",
           description: "A notícia foi atualizada com sucesso.",
         });
       } else {
-        await createNews(data);
+        await createNews({
+          title: data.title,
+          type: data.type,
+          content: data.content,
+          duration: data.duration,
+          active: data.active,
+        });
         toast({
           title: "Notícia cadastrada",
           description: "A notícia foi cadastrada com sucesso.",
