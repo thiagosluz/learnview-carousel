@@ -135,7 +135,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
+    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
+      {/* Logo flutuante */}
+      <div className="fixed bottom-4 right-4 z-50 w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden shadow-lg border-4 border-white hover:scale-105 transition-transform">
+        <img
+          src="https://scontent.frec10-1.fna.fbcdn.net/v/t39.30808-6/469317382_505665579174481_5541984506667947629_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeH3UddZ5zzNq7TXOx8VZN56sgp7lNDTSUayCnuU0NNJRot-UmUaGYetQ3qNEyXverT3158ppEI0cNMFNO6cHk_L&_nc_ohc=43EFwFU8Qf4Q7kNvgGuuacY&_nc_zt=23&_nc_ht=scontent.frec10-1.fna&_nc_gid=An7C7M86beHmfHOGensTgG-&oh=00_AYBZFSmSVMYJzTbp1fGugVKxMMrhcyRcRDz80je_dG8P1w&oe=67B2D234"
+          alt="Logo Coordenação"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       <div className="max-w-[2100px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
           <div className="lg:h-full flex flex-col">
