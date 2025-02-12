@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import ClassSchedule from '@/components/ClassSchedule';
 import NewsCarousel from '@/components/NewsCarousel';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const mockClasses = [
   {
@@ -34,6 +36,36 @@ const mockClasses = [
     subject: 'Redes de Computadores',
     lab: 'Laboratório 03',
   },
+  {
+    startTime: '16:15',
+    endTime: '18:15',
+    professor: {
+      name: 'Profa. Lima',
+      photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    subject: 'Sistemas Operacionais',
+    lab: 'Laboratório 01',
+  },
+  {
+    startTime: '19:00',
+    endTime: '21:00',
+    professor: {
+      name: 'Prof. Costa',
+      photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    subject: 'Inteligência Artificial',
+    lab: 'Laboratório 02',
+  },
+  {
+    startTime: '21:15',
+    endTime: '23:15',
+    professor: {
+      name: 'Prof. Pereira',
+      photoUrl: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    subject: 'Segurança da Informação',
+    lab: 'Laboratório 03',
+  },
 ];
 
 const mockNews = [
@@ -59,10 +91,19 @@ const mockNews = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-[2100px] mx-auto space-y-8">
-        <NewsCarousel items={mockNews} />
-        <ClassSchedule classes={mockClasses} />
+    <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
+      <div className="max-w-[2100px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
+          <div className="lg:h-full flex flex-col">
+            <NewsCarousel items={mockNews} />
+          </div>
+          <div className="lg:h-full flex flex-col">
+            <ClassSchedule 
+              classes={mockClasses}
+              date={format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

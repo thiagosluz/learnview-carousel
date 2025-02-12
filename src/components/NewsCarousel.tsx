@@ -65,20 +65,27 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
     switch (item.type) {
       case 'text':
         return (
-          <div className="flex flex-col items-center justify-center h-full p-12 text-center">
+          <div className="flex flex-col items-center justify-center h-full p-12 text-center bg-gradient-to-br from-primary/5 to-accent/20">
             {item.title && (
-              <h2 className="text-4xl font-display font-bold mb-6">{item.title}</h2>
+              <h2 className="text-4xl font-display font-bold mb-6 text-gray-900">{item.title}</h2>
             )}
-            <p className="text-2xl leading-relaxed">{item.content}</p>
+            <p className="text-2xl leading-relaxed text-gray-700">{item.content}</p>
           </div>
         );
       case 'image':
         return (
-          <img
-            src={item.content}
-            alt={item.title || ''}
-            className="w-full h-full object-cover"
-          />
+          <div className="relative h-full">
+            <img
+              src={item.content}
+              alt={item.title || ''}
+              className="w-full h-full object-cover"
+            />
+            {item.title && (
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+                <h2 className="text-2xl font-bold text-white">{item.title}</h2>
+              </div>
+            )}
+          </div>
         );
       case 'video':
         return (
@@ -97,7 +104,7 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
   };
 
   return (
-    <div className="relative w-full h-[30vh] bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div className="relative w-full h-full bg-white rounded-2xl shadow-lg overflow-hidden">
       <div className="absolute inset-0 animate-fade-in">{renderContent()}</div>
       
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
@@ -109,14 +116,14 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
 
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-lg"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-lg"
       >
         <ChevronRight className="w-6 h-6" />
       </button>

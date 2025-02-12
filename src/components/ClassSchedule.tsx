@@ -17,9 +17,10 @@ interface Class {
 
 interface ClassScheduleProps {
   classes: Class[];
+  date: string;
 }
 
-const ClassSchedule = ({ classes }: ClassScheduleProps) => {
+const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const [currentClass, setCurrentClass] = useState<number | null>(null);
 
   useEffect(() => {
@@ -44,16 +45,19 @@ const ClassSchedule = ({ classes }: ClassScheduleProps) => {
   }, [classes]);
 
   return (
-    <div className="w-full p-8 bg-white rounded-2xl shadow-lg animate-fade-in">
-      <h2 className="text-4xl font-display font-bold text-gray-900 mb-8">Horários de Hoje</h2>
-      <div className="space-y-6">
+    <div className="w-full h-full p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in overflow-hidden flex flex-col">
+      <div className="mb-8">
+        <h2 className="text-4xl font-display font-bold text-gray-900">Horários de Hoje</h2>
+        <p className="text-xl text-gray-600 capitalize mt-2">{date}</p>
+      </div>
+      <div className="space-y-4 overflow-y-auto flex-grow pr-4">
         {classes.map((classItem, index) => (
           <div
             key={index}
             className={`p-6 rounded-xl transition-all duration-300 ${
               currentClass === index
                 ? 'bg-primary text-white scale-[1.02] shadow-lg'
-                : 'bg-secondary/10 hover:bg-secondary/20'
+                : 'bg-white hover:bg-secondary/20'
             }`}
           >
             <div className="flex items-center gap-6">
@@ -61,7 +65,9 @@ const ClassSchedule = ({ classes }: ClassScheduleProps) => {
                 <img
                   src={classItem.professor.photoUrl}
                   alt={classItem.professor.name}
-                  className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md"
+                  className={`w-16 h-16 rounded-full object-cover border-4 shadow-md ${
+                    currentClass === index ? 'border-white' : 'border-primary/20'
+                  }`}
                 />
               </div>
               <div className="flex-grow">
