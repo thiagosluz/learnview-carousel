@@ -9,6 +9,8 @@ import ProfessorList from "./pages/ProfessorList";
 import ProfessorForm from "./pages/ProfessorForm";
 import ClassList from "./pages/ClassList";
 import ClassForm from "./pages/ClassForm";
+import NewsList from "./pages/NewsList";
+import NewsForm from "./pages/NewsForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,9 @@ const App = () => (
           <Route path="/classes" element={<ClassList />} />
           <Route path="/classes/new" element={<ClassForm />} />
           <Route path="/classes/edit/:id" element={<ClassForm />} />
+          <Route path="/news" element={<NewsList />} />
+          <Route path="/news/new" element={<NewsForm />} />
+          <Route path="/news/edit/:id" element={<NewsForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

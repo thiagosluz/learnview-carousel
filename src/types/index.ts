@@ -21,4 +21,5 @@ export interface NewsItem {
   title: string;
   content: string;
   duration: number;
+  active?: boolean;
 }
