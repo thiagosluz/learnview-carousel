@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { fetchAllClasses, deleteClass } from '@/services/api';
+import { fetchAllClasses, deleteClass } from '@/services';
 import { Class } from '@/types';
 
 const DIAS_SEMANA = [
@@ -41,7 +41,7 @@ const ClassList = () => {
   const { toast } = useToast();
   const [classToDelete, setClassToDelete] = useState<Class | null>(null);
 
-  const { data: classes, isLoading, refetch } = useQuery({
+  const { data: classes = [], isLoading, refetch } = useQuery<Class[]>({
     queryKey: ['classes'],
     queryFn: fetchAllClasses,
     meta: {

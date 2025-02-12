@@ -8,16 +8,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import ClassSchedule from '@/components/ClassSchedule';
 import NewsCarousel from '@/components/NewsCarousel';
-import { fetchTodayClasses, fetchActiveNews } from '@/services/api';
+import { fetchTodayClasses, fetchActiveNews } from '@/services';
+import { Class, NewsItem } from '@/types';
 
 const Index = () => {
   const { toast } = useToast();
 
   const { 
-    data: classes, 
+    data: classes = [], 
     isLoading: isLoadingClasses,
     error: classesError
-  } = useQuery({
+  } = useQuery<Class[]>({
     queryKey: ['classes'],
     queryFn: fetchTodayClasses,
     retry: 2,
@@ -34,10 +35,10 @@ const Index = () => {
   });
 
   const {
-    data: news,
+    data: news = [],
     isLoading: isLoadingNews,
     error: newsError
-  } = useQuery({
+  } = useQuery<NewsItem[]>({
     queryKey: ['news'],
     queryFn: fetchActiveNews,
     retry: 2,

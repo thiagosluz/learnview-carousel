@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createClass, updateClass, fetchClass, fetchProfessors } from '@/services/api';
+import { createClass, updateClass, fetchClass, fetchProfessors } from '@/services';
 import { Professor } from '@/types';
 
 const DIAS_SEMANA = [
@@ -39,7 +39,7 @@ const ClassForm = () => {
   const [lab, setLab] = useState('');
   const [dayOfWeek, setDayOfWeek] = useState<string>('');
 
-  const { data: professors } = useQuery({
+  const { data: professors = [] } = useQuery<Professor[]>({
     queryKey: ['professors'],
     queryFn: fetchProfessors,
   });

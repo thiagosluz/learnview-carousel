@@ -24,14 +24,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { fetchProfessors, deleteProfessor } from '@/services/api';
+import { fetchProfessors, deleteProfessor } from '@/services';
 import { Professor } from '@/types';
 
 const ProfessorList = () => {
   const { toast } = useToast();
   const [professorToDelete, setProfessorToDelete] = useState<Professor | null>(null);
 
-  const { data: professors, isLoading, refetch } = useQuery({
+  const { data: professors = [], isLoading, refetch } = useQuery<Professor[]>({
     queryKey: ['professors'],
     queryFn: fetchProfessors,
     meta: {

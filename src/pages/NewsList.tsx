@@ -24,14 +24,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { fetchActiveNews, deleteNews } from '@/services/api';
+import { fetchActiveNews, deleteNews } from '@/services';
 import { NewsItem } from '@/types';
 
 const NewsList = () => {
   const { toast } = useToast();
   const [newsToDelete, setNewsToDelete] = useState<NewsItem | null>(null);
 
-  const { data: news, isLoading, refetch } = useQuery({
+  const { data: news = [], isLoading, refetch } = useQuery<NewsItem[]>({
     queryKey: ['news'],
     queryFn: fetchActiveNews,
     meta: {
