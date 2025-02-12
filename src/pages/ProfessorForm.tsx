@@ -78,13 +78,19 @@ const ProfessorForm = () => {
     setIsLoading(true);
     try {
       if (id) {
-        await updateProfessor(id, data);
+        await updateProfessor(id, {
+          name: data.name,
+          photo: data.photo,
+        });
         toast({
           title: "Professor atualizado",
           description: "Os dados do professor foram atualizados com sucesso.",
         });
       } else {
-        await createProfessor(data);
+        await createProfessor({
+          name: data.name,
+          photo: data.photo,
+        });
         toast({
           title: "Professor cadastrado",
           description: "O professor foi cadastrado com sucesso.",
