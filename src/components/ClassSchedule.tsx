@@ -64,7 +64,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                     : 'bg-white hover:bg-secondary/20'
                 }`}
               >
-                <div className="flex items-center gap-4 lg:gap-6">
+                <div className="flex gap-4 lg:gap-6">
                   <div className="flex-shrink-0">
                     <img
                       src={classItem.professor.photo_url}
@@ -74,17 +74,17 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                       }`}
                     />
                   </div>
-                  <div className="flex-grow min-w-0">
-                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-1">
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-2">
                       <Clock className="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" />
-                      <span className="truncate">{classItem.start_time} - {classItem.end_time}</span>
+                      <span className="whitespace-normal">{classItem.start_time} - {classItem.end_time}</span>
                     </div>
-                    <h3 className="text-lg lg:text-xl font-bold mb-1 truncate">{classItem.subject}</h3>
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
-                      <p className="text-base lg:text-lg truncate">{classItem.professor.name}</p>
-                      <div className="flex items-center gap-1 text-sm mt-1 lg:mt-0">
+                    <h3 className="text-lg lg:text-xl font-bold mb-2 break-words">{classItem.subject}</h3>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-base lg:text-lg break-words">{classItem.professor.name}</p>
+                      <div className="flex items-center gap-2 text-sm">
                         <MapPin className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{classItem.lab}</span>
+                        <span className="whitespace-normal">{classItem.lab}</span>
                       </div>
                     </div>
                   </div>
@@ -104,7 +104,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                     : 'bg-white hover:bg-secondary/20'
                 }`}
               >
-                <div className="flex items-center gap-4 lg:gap-6">
+                <div className="flex gap-4 lg:gap-6">
                   <div className="flex-shrink-0">
                     <img
                       src={classItem.professor.photo_url}
@@ -114,17 +114,17 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                       }`}
                     />
                   </div>
-                  <div className="flex-grow min-w-0">
-                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-1">
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-2">
                       <Clock className="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" />
-                      <span className="truncate">{classItem.start_time} - {classItem.end_time}</span>
+                      <span className="whitespace-normal">{classItem.start_time} - {classItem.end_time}</span>
                     </div>
-                    <h3 className="text-lg lg:text-xl font-bold mb-1 truncate">{classItem.subject}</h3>
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
-                      <p className="text-base lg:text-lg truncate">{classItem.professor.name}</p>
-                      <div className="flex items-center gap-1 text-sm mt-1 lg:mt-0">
+                    <h3 className="text-lg lg:text-xl font-bold mb-2 break-words">{classItem.subject}</h3>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-base lg:text-lg break-words">{classItem.professor.name}</p>
+                      <div className="flex items-center gap-2 text-sm">
                         <MapPin className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{classItem.lab}</span>
+                        <span className="whitespace-normal">{classItem.lab}</span>
                       </div>
                     </div>
                   </div>
