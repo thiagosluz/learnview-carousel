@@ -17,6 +17,7 @@ const DATA_REFRESH_INTERVAL = 300000; // 5 minutos
 const Index = () => {
   const { toast } = useToast();
   const [currentShift, setCurrentShift] = useState<'morning' | 'afternoon' | 'night'>('morning');
+  const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
   // Função para determinar o turno atual e filtrar as aulas
   const determineShiftAndFilterClasses = (classes: Class[]) => {
@@ -32,10 +33,8 @@ const Index = () => {
       shift = 'night';
     }
 
-    setCurrentShift(shift);
-
     // Filtrar aulas baseado no turno
-    return classes.filter(classItem => {
+    const filtered = classes.filter(classItem => {
       const classHour = parseInt(classItem.start_time.split(':')[0]);
       
       switch (shift) {
@@ -47,13 +46,15 @@ const Index = () => {
           return classHour >= 18 || classHour < 6;
       }
     });
+
+    setCurrentShift(shift);
+    setFilteredClasses(filtered);
   };
 
   const { 
     data: allClasses = [], 
     isLoading: isLoadingClasses,
     error: classesError,
-    refetch: refetchClasses
   } = useQuery<Class[]>({
     queryKey: ['classes'],
     queryFn: fetchTodayClasses,
@@ -75,7 +76,6 @@ const Index = () => {
     data: news = [],
     isLoading: isLoadingNews,
     error: newsError,
-    refetch: refetchNews
   } = useQuery<NewsItem[]>({
     queryKey: ['news'],
     queryFn: fetchActiveNews,
@@ -93,7 +93,14 @@ const Index = () => {
     }
   });
 
-  // Atualizar o turno periodicamente
+  // Atualizar o turno e as aulas filtradas quando os dados mudarem
+  useEffect(() => {
+    if (allClasses.length > 0) {
+      determineShiftAndFilterClasses(allClasses);
+    }
+  }, [allClasses]);
+
+  // Atualizar periodicamente o turno e as aulas filtradas
   useEffect(() => {
     const updateShift = () => {
       if (allClasses.length > 0) {
@@ -101,17 +108,12 @@ const Index = () => {
       }
     };
 
-    // Atualizar imediatamente e configurar o intervalo
-    updateShift();
     const shiftInterval = setInterval(updateShift, SHIFT_UPDATE_INTERVAL);
 
     return () => {
       clearInterval(shiftInterval);
     };
   }, [allClasses]);
-
-  // Filtrar as aulas com base no turno atual
-  const filteredClasses = determineShiftAndFilterClasses(allClasses);
 
   if (isLoadingClasses || isLoadingNews) {
     return (
