@@ -1,14 +1,14 @@
 
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Form,
   FormControl,
@@ -17,27 +17,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { createNews, updateNews, fetchNews } from '@/services';
-
-const formSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório'),
-  type: z.enum(['text', 'image'], {
-    required_error: 'Tipo é obrigatório',
-  }),
-  content: z.string().min(1, 'Conteúdo é obrigatório'),
-  duration: z.coerce.number().min(1, 'Duração mínima é 1 segundo'),
-  active: z.boolean().default(true),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import { NewsFormHeader } from '@/components/news/NewsFormHeader';
+import { ImageUploadField } from '@/components/news/ImageUploadField';
+import { NewsTypeField } from '@/components/news/NewsTypeField';
+import { formSchema, FormData } from '@/components/news/NewsFormTypes';
 
 const NewsForm = () => {
   const { id } = useParams();
@@ -143,16 +127,7 @@ const NewsForm = () => {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Link to="/news">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold">
-            {id ? 'Editar Notícia' : 'Nova Notícia'}
-          </h1>
-        </div>
+        <NewsFormHeader isEditing={!!id} />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -170,30 +145,7 @@ const NewsForm = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tipo</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="text">Texto</SelectItem>
-                      <SelectItem value="image">Imagem</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <NewsTypeField form={form} />
 
             <FormField
               control={form.control}
@@ -203,24 +155,11 @@ const NewsForm = () => {
                   <FormLabel>Conteúdo</FormLabel>
                   <FormControl>
                     {isImageType ? (
-                      <div className="space-y-4">
-                        {previewUrl && (
-                          <img
-                            src={previewUrl}
-                            alt="Preview"
-                            className="w-full max-h-[300px] object-contain rounded-lg border"
-                          />
-                        )}
-                        <Input 
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                        />
-                        <Input 
-                          {...field}
-                          type="hidden"
-                        />
-                      </div>
+                      <ImageUploadField
+                        previewUrl={previewUrl}
+                        onImageChange={handleImageChange}
+                        fieldProps={field}
+                      />
                     ) : (
                       <Textarea 
                         placeholder="Conteúdo da notícia" 
