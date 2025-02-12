@@ -66,7 +66,7 @@ const NewsForm = () => {
             content: news.content,
             duration: news.duration,
             active: news.active ?? true,
-          });
+          } as FormData);
         } catch (error) {
           toast({
             variant: "destructive",
