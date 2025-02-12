@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -27,7 +27,6 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { createNews, updateNews, fetchNews } from '@/services';
 
-// Definindo o schema e tipo para o formulário
 const formSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório'),
   type: z.enum(['text', 'image'], {
@@ -38,13 +37,14 @@ const formSchema = z.object({
   active: z.boolean().default(true),
 });
 
-// Tipo inferido do schema
 type FormData = z.infer<typeof formSchema>;
 
 const NewsForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -69,6 +69,9 @@ const NewsForm = () => {
             duration: news.duration,
             active: news.active ?? true,
           });
+          if (news.type === 'image') {
+            setPreviewUrl(news.content);
+          }
         } catch (error) {
           toast({
             variant: "destructive",
@@ -82,6 +85,19 @@ const NewsForm = () => {
     }
   }, [id, form, navigate, toast]);
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+        form.setValue('content', file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     try {
       if (id) {
@@ -91,6 +107,7 @@ const NewsForm = () => {
           content: data.content,
           duration: data.duration,
           active: data.active,
+          image: selectedImage ?? undefined,
         });
         toast({
           title: "Notícia atualizada",
@@ -103,6 +120,7 @@ const NewsForm = () => {
           content: data.content,
           duration: data.duration,
           active: data.active,
+          image: selectedImage ?? undefined,
         });
         toast({
           title: "Notícia cadastrada",
@@ -120,6 +138,7 @@ const NewsForm = () => {
   };
 
   const isLoading = form.formState.isSubmitting;
+  const isImageType = form.watch('type') === 'image';
 
   return (
     <div className="container mx-auto py-8">
@@ -183,16 +202,29 @@ const NewsForm = () => {
                 <FormItem>
                   <FormLabel>Conteúdo</FormLabel>
                   <FormControl>
-                    {form.watch('type') === 'text' ? (
+                    {isImageType ? (
+                      <div className="space-y-4">
+                        {previewUrl && (
+                          <img
+                            src={previewUrl}
+                            alt="Preview"
+                            className="w-full max-h-[300px] object-contain rounded-lg border"
+                          />
+                        )}
+                        <Input 
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                        />
+                        <Input 
+                          {...field}
+                          type="hidden"
+                        />
+                      </div>
+                    ) : (
                       <Textarea 
                         placeholder="Conteúdo da notícia" 
                         className="min-h-[100px]"
-                        {...field} 
-                      />
-                    ) : (
-                      <Input 
-                        placeholder="URL da imagem" 
-                        type="url" 
                         {...field} 
                       />
                     )}

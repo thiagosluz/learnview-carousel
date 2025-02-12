@@ -43,26 +43,57 @@ export async function fetchNews(id: string): Promise<NewsItem> {
   }
 }
 
+export async function uploadNewsImage(file: File): Promise<string> {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('news-images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('news-images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw new Error('Não foi possível fazer o upload da imagem');
+  }
+}
+
 export async function createNews({
   title,
   type,
   content,
   duration,
   active,
+  image,
 }: {
   title: string;
   type: 'text' | 'image';
   content: string;
   duration: number;
   active: boolean;
+  image?: File;
 }): Promise<void> {
   try {
+    let finalContent = content;
+
+    if (type === 'image' && image) {
+      finalContent = await uploadNewsImage(image);
+    }
+
     const { error } = await supabase
       .from('news')
       .insert([{ 
         title,
         type,
-        content,
+        content: finalContent,
         duration,
         active,
       }]);
@@ -82,21 +113,29 @@ export async function updateNews(
     content,
     duration,
     active,
+    image,
   }: {
     title: string;
     type: 'text' | 'image';
     content: string;
     duration: number;
     active: boolean;
+    image?: File;
   }
 ): Promise<void> {
   try {
+    let finalContent = content;
+
+    if (type === 'image' && image) {
+      finalContent = await uploadNewsImage(image);
+    }
+
     const { error } = await supabase
       .from('news')
       .update({ 
         title,
         type,
-        content,
+        content: finalContent,
         duration,
         active,
       })
