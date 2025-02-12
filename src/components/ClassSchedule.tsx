@@ -73,7 +73,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                     <span className="whitespace-normal">{classItem.start_time} - {classItem.end_time}</span>
                   </div>
                   <h3 className="text-lg lg:text-xl font-bold mb-2 break-words">{classItem.subject}</h3>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-row items-center justify-between">
                     <p className="text-base lg:text-lg break-words">{classItem.professor.name}</p>
                     <div className="flex items-center gap-2 text-sm">
                       <MapPin className="w-4 h-4 flex-shrink-0" />
