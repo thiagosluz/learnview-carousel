@@ -9,7 +9,98 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      classes: {
+        Row: {
+          created_at: string | null
+          day_of_week: number
+          end_time: string
+          id: string
+          lab: string
+          professor_id: string
+          start_time: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string | null
+          day_of_week: number
+          end_time: string
+          id?: string
+          lab: string
+          professor_id: string
+          start_time: string
+          subject: string
+        }
+        Update: {
+          created_at?: string | null
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          lab?: string
+          professor_id?: string
+          start_time?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "professors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news: {
+        Row: {
+          active: boolean | null
+          content: string
+          created_at: string | null
+          duration: number
+          id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          active?: boolean | null
+          content: string
+          created_at?: string | null
+          duration?: number
+          id?: string
+          title: string
+          type: string
+        }
+        Update: {
+          active?: boolean | null
+          content?: string
+          created_at?: string | null
+          duration?: number
+          id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      professors: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          photo_url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          photo_url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          photo_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

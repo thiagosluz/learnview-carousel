@@ -1,13 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-interface NewsItem {
-  type: 'text' | 'image' | 'video';
-  content: string;
-  title?: string;
-  duration?: number;
-}
+import { NewsItem } from '@/types';
 
 interface NewsCarouselProps {
   items: NewsItem[];
@@ -21,20 +15,24 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
 
   const getCurrentDuration = () => {
     const item = items[currentIndex];
-    return item.duration || (item.type === 'video' ? 30 : 10);
+    return item?.duration || 10;
   };
 
   const nextSlide = () => {
+    if (items.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % items.length);
     setProgress(0);
   };
 
   const prevSlide = () => {
+    if (items.length === 0) return;
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
     setProgress(0);
   };
 
   useEffect(() => {
+    if (items.length === 0) return;
+    
     const duration = getCurrentDuration() * 1000;
     const interval = duration / 100;
 
@@ -59,6 +57,14 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
     };
   }, [currentIndex, items]);
 
+  if (items.length === 0) {
+    return (
+      <div className="w-full h-full bg-white rounded-2xl shadow-lg overflow-hidden flex items-center justify-center">
+        <p className="text-xl text-gray-500">Nenhuma notícia disponível</p>
+      </div>
+    );
+  }
+
   const renderContent = () => {
     const item = items[currentIndex];
 
@@ -66,9 +72,7 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
       case 'text':
         return (
           <div className="flex flex-col items-center justify-center h-full p-12 text-center bg-gradient-to-br from-primary/5 to-accent/20">
-            {item.title && (
-              <h2 className="text-4xl font-display font-bold mb-6 text-gray-900">{item.title}</h2>
-            )}
+            <h2 className="text-4xl font-display font-bold mb-6 text-gray-900">{item.title}</h2>
             <p className="text-2xl leading-relaxed text-gray-700">{item.content}</p>
           </div>
         );
@@ -77,26 +81,13 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
           <div className="relative h-full">
             <img
               src={item.content}
-              alt={item.title || ''}
+              alt={item.title}
               className="w-full h-full object-cover"
             />
-            {item.title && (
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-                <h2 className="text-2xl font-bold text-white">{item.title}</h2>
-              </div>
-            )}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+              <h2 className="text-2xl font-bold text-white">{item.title}</h2>
+            </div>
           </div>
-        );
-      case 'video':
-        return (
-          <video
-            ref={videoRef}
-            src={item.content}
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-          />
         );
       default:
         return null;

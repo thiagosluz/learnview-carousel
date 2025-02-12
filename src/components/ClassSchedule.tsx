@@ -1,19 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { Clock, MapPin } from 'lucide-react';
-
-interface Professor {
-  name: string;
-  photoUrl: string;
-}
-
-interface Class {
-  startTime: string;
-  endTime: string;
-  professor: Professor;
-  subject: string;
-  lab: string;
-}
+import { Class } from '@/types';
 
 interface ClassScheduleProps {
   classes: Class[];
@@ -32,7 +20,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
         .padStart(2, '0')}`;
 
       const currentIndex = classes.findIndex((classItem) => {
-        return currentTime >= classItem.startTime && currentTime <= classItem.endTime;
+        return currentTime >= classItem.start_time && currentTime <= classItem.end_time;
       });
 
       setCurrentClass(currentIndex);
@@ -49,6 +37,14 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const leftColumnClasses = classes.slice(0, midPoint);
   const rightColumnClasses = classes.slice(midPoint);
 
+  if (classes.length === 0) {
+    return (
+      <div className="w-full h-full p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg flex items-center justify-center">
+        <p className="text-xl text-gray-500">Nenhuma aula programada para hoje</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in overflow-hidden flex flex-col">
       <div className="mb-8">
@@ -60,7 +56,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
         <div className="space-y-4">
           {leftColumnClasses.map((classItem, index) => (
             <div
-              key={index}
+              key={classItem.id}
               className={`p-6 rounded-xl transition-all duration-300 ${
                 currentClass === index
                   ? 'bg-primary text-white scale-[1.02] shadow-lg'
@@ -70,7 +66,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
               <div className="flex items-center gap-6">
                 <div className="flex-shrink-0">
                   <img
-                    src={classItem.professor.photoUrl}
+                    src={classItem.professor.photo_url}
                     alt={classItem.professor.name}
                     className={`w-16 h-16 rounded-full object-cover border-4 shadow-md ${
                       currentClass === index ? 'border-white' : 'border-primary/20'
@@ -80,7 +76,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 text-lg font-semibold mb-1">
                     <Clock className="w-5 h-5" />
-                    {classItem.startTime} - {classItem.endTime}
+                    {classItem.start_time} - {classItem.end_time}
                   </div>
                   <h3 className="text-xl font-bold mb-1">{classItem.subject}</h3>
                   <div className="flex items-center gap-4">
@@ -100,7 +96,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
         <div className="space-y-4">
           {rightColumnClasses.map((classItem, index) => (
             <div
-              key={index + midPoint}
+              key={classItem.id}
               className={`p-6 rounded-xl transition-all duration-300 ${
                 currentClass === index + midPoint
                   ? 'bg-primary text-white scale-[1.02] shadow-lg'
@@ -110,7 +106,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
               <div className="flex items-center gap-6">
                 <div className="flex-shrink-0">
                   <img
-                    src={classItem.professor.photoUrl}
+                    src={classItem.professor.photo_url}
                     alt={classItem.professor.name}
                     className={`w-16 h-16 rounded-full object-cover border-4 shadow-md ${
                       currentClass === index + midPoint ? 'border-white' : 'border-primary/20'
@@ -120,7 +116,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 text-lg font-semibold mb-1">
                     <Clock className="w-5 h-5" />
-                    {classItem.startTime} - {classItem.endTime}
+                    {classItem.start_time} - {classItem.end_time}
                   </div>
                   <h3 className="text-xl font-bold mb-1">{classItem.subject}</h3>
                   <div className="flex items-center gap-4">
