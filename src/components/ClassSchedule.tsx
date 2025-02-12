@@ -46,90 +46,92 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   }
 
   return (
-    <div className="w-full h-full p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in overflow-hidden flex flex-col">
-      <div className="mb-8">
-        <h2 className="text-4xl font-display font-bold text-gray-900">Horários de Hoje</h2>
-        <p className="text-xl text-gray-600 capitalize mt-2">{date}</p>
+    <div className="w-full h-full p-4 lg:p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in overflow-hidden flex flex-col">
+      <div className="mb-4 lg:mb-8">
+        <h2 className="text-2xl lg:text-4xl font-display font-bold text-gray-900">Horários de Hoje</h2>
+        <p className="text-lg lg:text-xl text-gray-600 capitalize mt-2">{date}</p>
       </div>
-      <div className="grid grid-cols-2 gap-4 flex-grow">
-        {/* Left Column */}
-        <div className="space-y-4">
-          {leftColumnClasses.map((classItem, index) => (
-            <div
-              key={classItem.id}
-              className={`p-6 rounded-xl transition-all duration-300 ${
-                currentClass === index
-                  ? 'bg-primary text-white scale-[1.02] shadow-lg'
-                  : 'bg-white hover:bg-secondary/20'
-              }`}
-            >
-              <div className="flex items-center gap-6">
-                <div className="flex-shrink-0">
-                  <img
-                    src={classItem.professor.photo_url}
-                    alt={classItem.professor.name}
-                    className={`w-16 h-16 rounded-full object-cover border-4 shadow-md ${
-                      currentClass === index ? 'border-white' : 'border-primary/20'
-                    }`}
-                  />
-                </div>
-                <div className="flex-grow">
-                  <div className="flex items-center gap-2 text-lg font-semibold mb-1">
-                    <Clock className="w-5 h-5" />
-                    {classItem.start_time} - {classItem.end_time}
+      <div className="flex-grow overflow-y-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4">
+          {/* Left Column */}
+          <div className="space-y-4">
+            {leftColumnClasses.map((classItem, index) => (
+              <div
+                key={classItem.id}
+                className={`p-4 lg:p-6 rounded-xl transition-all duration-300 ${
+                  currentClass === index
+                    ? 'bg-primary text-white scale-[1.02] shadow-lg'
+                    : 'bg-white hover:bg-secondary/20'
+                }`}
+              >
+                <div className="flex items-center gap-4 lg:gap-6">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={classItem.professor.photo_url}
+                      alt={classItem.professor.name}
+                      className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full object-cover border-4 shadow-md ${
+                        currentClass === index ? 'border-white' : 'border-primary/20'
+                      }`}
+                    />
                   </div>
-                  <h3 className="text-xl font-bold mb-1">{classItem.subject}</h3>
-                  <div className="flex items-center gap-4">
-                    <p className="text-lg">{classItem.professor.name}</p>
-                    <div className="flex items-center gap-1 text-sm">
-                      <MapPin className="w-4 h-4" />
-                      {classItem.lab}
+                  <div className="flex-grow min-w-0">
+                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-1">
+                      <Clock className="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" />
+                      <span className="truncate">{classItem.start_time} - {classItem.end_time}</span>
+                    </div>
+                    <h3 className="text-lg lg:text-xl font-bold mb-1 truncate">{classItem.subject}</h3>
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
+                      <p className="text-base lg:text-lg truncate">{classItem.professor.name}</p>
+                      <div className="flex items-center gap-1 text-sm mt-1 lg:mt-0">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{classItem.lab}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Right Column */}
-        <div className="space-y-4">
-          {rightColumnClasses.map((classItem, index) => (
-            <div
-              key={classItem.id}
-              className={`p-6 rounded-xl transition-all duration-300 ${
-                currentClass === index + midPoint
-                  ? 'bg-primary text-white scale-[1.02] shadow-lg'
-                  : 'bg-white hover:bg-secondary/20'
-              }`}
-            >
-              <div className="flex items-center gap-6">
-                <div className="flex-shrink-0">
-                  <img
-                    src={classItem.professor.photo_url}
-                    alt={classItem.professor.name}
-                    className={`w-16 h-16 rounded-full object-cover border-4 shadow-md ${
-                      currentClass === index + midPoint ? 'border-white' : 'border-primary/20'
-                    }`}
-                  />
-                </div>
-                <div className="flex-grow">
-                  <div className="flex items-center gap-2 text-lg font-semibold mb-1">
-                    <Clock className="w-5 h-5" />
-                    {classItem.start_time} - {classItem.end_time}
+            ))}
+          </div>
+          
+          {/* Right Column */}
+          <div className="space-y-4">
+            {rightColumnClasses.map((classItem, index) => (
+              <div
+                key={classItem.id}
+                className={`p-4 lg:p-6 rounded-xl transition-all duration-300 ${
+                  currentClass === index + midPoint
+                    ? 'bg-primary text-white scale-[1.02] shadow-lg'
+                    : 'bg-white hover:bg-secondary/20'
+                }`}
+              >
+                <div className="flex items-center gap-4 lg:gap-6">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={classItem.professor.photo_url}
+                      alt={classItem.professor.name}
+                      className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full object-cover border-4 shadow-md ${
+                        currentClass === index + midPoint ? 'border-white' : 'border-primary/20'
+                      }`}
+                    />
                   </div>
-                  <h3 className="text-xl font-bold mb-1">{classItem.subject}</h3>
-                  <div className="flex items-center gap-4">
-                    <p className="text-lg">{classItem.professor.name}</p>
-                    <div className="flex items-center gap-1 text-sm">
-                      <MapPin className="w-4 h-4" />
-                      {classItem.lab}
+                  <div className="flex-grow min-w-0">
+                    <div className="flex items-center gap-2 text-base lg:text-lg font-semibold mb-1">
+                      <Clock className="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" />
+                      <span className="truncate">{classItem.start_time} - {classItem.end_time}</span>
+                    </div>
+                    <h3 className="text-lg lg:text-xl font-bold mb-1 truncate">{classItem.subject}</h3>
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
+                      <p className="text-base lg:text-lg truncate">{classItem.professor.name}</p>
+                      <div className="flex items-center gap-1 text-sm mt-1 lg:mt-0">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{classItem.lab}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
