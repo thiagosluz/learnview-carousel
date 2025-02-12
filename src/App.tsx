@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ProfessorList from "./pages/ProfessorList";
 import ProfessorForm from "./pages/ProfessorForm";
+import ClassList from "./pages/ClassList";
+import ClassForm from "./pages/ClassForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,9 @@ const App = () => (
           <Route path="/professors" element={<ProfessorList />} />
           <Route path="/professors/new" element={<ProfessorForm />} />
           <Route path="/professors/edit/:id" element={<ProfessorForm />} />
+          <Route path="/classes" element={<ClassList />} />
+          <Route path="/classes/new" element={<ClassForm />} />
+          <Route path="/classes/edit/:id" element={<ClassForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
