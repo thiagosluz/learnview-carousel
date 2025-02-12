@@ -21,12 +21,15 @@ const Index = () => {
     queryKey: ['classes'],
     queryFn: fetchTodayClasses,
     retry: 2,
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Erro ao carregar horários",
-        description: error.message,
-      });
+    meta: {
+      errorMessage: 'Não foi possível carregar os horários das aulas',
+      onError: (error: Error) => {
+        toast({
+          variant: "destructive",
+          title: "Erro ao carregar horários",
+          description: error.message,
+        });
+      }
     }
   });
 
@@ -38,12 +41,15 @@ const Index = () => {
     queryKey: ['news'],
     queryFn: fetchActiveNews,
     retry: 2,
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Erro ao carregar notícias",
-        description: error.message,
-      });
+    meta: {
+      errorMessage: 'Não foi possível carregar as notícias',
+      onError: (error: Error) => {
+        toast({
+          variant: "destructive",
+          title: "Erro ao carregar notícias",
+          description: error.message,
+        });
+      }
     }
   });
 
