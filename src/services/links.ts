@@ -39,7 +39,7 @@ export const createLink = async ({ name, url }: Omit<Link, 'id'>) => {
   return data;
 };
 
-export const updateLink = async (id: string, { name, url }: Partial<Omit<Link, 'id'>>) => {
+export const updateLink = async (id: string, { name, url }: Omit<Link, 'id'>) => {
   const { data, error } = await supabase
     .from('coordination_links')
     .update({ name, url })

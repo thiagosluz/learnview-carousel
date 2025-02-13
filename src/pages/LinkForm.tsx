@@ -63,13 +63,19 @@ const LinkForm = () => {
   const onSubmit = async (data: FormData) => {
     try {
       if (id) {
-        await updateLink(id, data);
+        await updateLink(id, {
+          name: data.name,
+          url: data.url,
+        });
         toast({
           title: "Link atualizado",
           description: "O link foi atualizado com sucesso.",
         });
       } else {
-        await createLink(data);
+        await createLink({
+          name: data.name,
+          url: data.url,
+        });
         toast({
           title: "Link cadastrado",
           description: "O link foi cadastrado com sucesso.",
