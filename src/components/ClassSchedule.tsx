@@ -73,11 +73,15 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                   <span>{classItem.start_time} - {classItem.end_time}</span>
                 </div>
                 <h3 className="text-base lg:text-lg font-bold mt-1 break-words">{classItem.subject}</h3>
-                <div className="flex items-center justify-between mt-1 text-sm">
-                  <span className="break-words">{classItem.professor.name}</span>
-                  <div className="flex items-center gap-1 ml-2">
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-sm break-words">{classItem.professor.name}</span>
+                  <div className={`flex items-center gap-1 ml-2 px-2 py-0.5 rounded-lg ${
+                    currentClasses.includes(index)
+                      ? 'bg-white/20 text-white'
+                      : 'bg-primary/10 text-primary'
+                  }`}>
                     <MapPin className="w-4 h-4 flex-shrink-0" />
-                    <span>{classItem.lab}</span>
+                    <span className="text-sm font-medium">{classItem.lab}</span>
                   </div>
                 </div>
               </div>
