@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
@@ -14,6 +15,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -27,9 +36,12 @@ import {
 import { fetchProfessors, deleteProfessor } from '@/services';
 import { Professor } from '@/types';
 
+const ITEMS_PER_PAGE = 10;
+
 const ProfessorList = () => {
   const { toast } = useToast();
   const [professorToDelete, setProfessorToDelete] = useState<Professor | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: professors = [], isLoading, refetch } = useQuery<Professor[]>({
     queryKey: ['professors'],
@@ -45,6 +57,11 @@ const ProfessorList = () => {
       }
     }
   });
+
+  const totalPages = Math.ceil(professors.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentProfessors = professors.slice(startIndex, endIndex);
 
   const handleDelete = async () => {
     if (!professorToDelete) return;
@@ -99,7 +116,7 @@ const ProfessorList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {professors?.map((professor) => (
+              {currentProfessors.map((professor) => (
                 <TableRow key={professor.id}>
                   <TableCell>
                     {professor.photo_url ? (
@@ -157,6 +174,39 @@ const ProfessorList = () => {
               ))}
             </TableBody>
           </Table>
+          {totalPages > 1 && (
+            <div className="py-4 border-t">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(page)}
+                        isActive={currentPage === page}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
@@ -14,6 +15,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -27,6 +36,7 @@ import {
 import { fetchAllClasses, deleteClass } from '@/services';
 import { Class } from '@/types';
 
+const ITEMS_PER_PAGE = 10;
 const DIAS_SEMANA = [
   'Domingo',
   'Segunda-feira',
@@ -40,6 +50,7 @@ const DIAS_SEMANA = [
 const ClassList = () => {
   const { toast } = useToast();
   const [classToDelete, setClassToDelete] = useState<Class | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: classes = [], isLoading, refetch } = useQuery<Class[]>({
     queryKey: ['classes'],
@@ -55,6 +66,11 @@ const ClassList = () => {
       }
     }
   });
+
+  const totalPages = Math.ceil(classes.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentClasses = classes.slice(startIndex, endIndex);
 
   const handleDelete = async () => {
     if (!classToDelete) return;
@@ -112,7 +128,7 @@ const ClassList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {classes?.map((class_) => (
+              {currentClasses.map((class_) => (
                 <TableRow key={class_.id}>
                   <TableCell>{DIAS_SEMANA[class_.day_of_week]}</TableCell>
                   <TableCell>{class_.start_time} - {class_.end_time}</TableCell>
@@ -174,6 +190,39 @@ const ClassList = () => {
               ))}
             </TableBody>
           </Table>
+          {totalPages > 1 && (
+            <div className="py-4 border-t">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(page)}
+                        isActive={currentPage === page}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       </div>
     </div>
