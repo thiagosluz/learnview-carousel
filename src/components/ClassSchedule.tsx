@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Clock, MapPin } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Class } from '@/types';
@@ -11,7 +11,7 @@ interface ClassScheduleProps {
 
 const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const [currentClasses, setCurrentClasses] = useState<number[]>([]);
-  const [emblaRef] = useEmblaCarousel({
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: false,
     containScroll: "trimSnaps",
     duration: 30,
@@ -27,6 +27,10 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
     groups[groupIndex].push(item);
     return groups;
   }, []);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   useEffect(() => {
     const getCurrentClasses = () => {
@@ -52,17 +56,11 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
 
   useEffect(() => {
     // Auto-scroll a cada 5 segundos se houver mais de um grupo
-    if (classGroups.length > 1) {
-      const interval = setInterval(() => {
-        const emblaApi = document.querySelector('[data-embla-container]');
-        if (emblaApi) {
-          (emblaApi as any).nextItem?.();
-        }
-      }, 5000);
-
+    if (classGroups.length > 1 && emblaApi) {
+      const interval = setInterval(scrollNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [classGroups.length]);
+  }, [emblaApi, classGroups.length, scrollNext]);
 
   if (classes.length === 0) {
     return (
