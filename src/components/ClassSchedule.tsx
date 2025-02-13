@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from 'react';
 import { Clock, MapPin } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -55,9 +54,9 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   }, [classes]);
 
   useEffect(() => {
-    // Auto-scroll a cada 5 segundos se houver mais de um grupo
+    // Auto-scroll a cada 7 segundos se houver mais de um grupo
     if (classGroups.length > 1 && emblaApi) {
-      const interval = setInterval(scrollNext, 5000);
+      const interval = setInterval(scrollNext, 7000);
       return () => clearInterval(interval);
     }
   }, [emblaApi, classGroups.length, scrollNext]);

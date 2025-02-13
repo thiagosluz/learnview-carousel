@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -20,7 +19,6 @@ const Index = () => {
   const [currentShift, setCurrentShift] = useState<'morning' | 'afternoon' | 'night'>('morning');
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
-  // Função para determinar o turno atual e filtrar as aulas
   const determineShiftAndFilterClasses = (classes: Class[]) => {
     const now = new Date();
     const currentTime = now.getHours();
@@ -34,7 +32,6 @@ const Index = () => {
       shift = 'night';
     }
 
-    // Filtrar aulas baseado no turno
     const filtered = classes.filter(classItem => {
       const classHour = parseInt(classItem.start_time.split(':')[0]);
       
@@ -94,14 +91,12 @@ const Index = () => {
     }
   });
 
-  // Atualizar o turno e as aulas filtradas quando os dados mudarem
   useEffect(() => {
     if (allClasses.length > 0) {
       determineShiftAndFilterClasses(allClasses);
     }
   }, [allClasses]);
 
-  // Atualizar periodicamente o turno e as aulas filtradas
   useEffect(() => {
     const updateShift = () => {
       if (allClasses.length > 0) {
@@ -116,6 +111,17 @@ const Index = () => {
     };
   }, [allClasses]);
 
+  const getTurnoText = () => {
+    switch (currentShift) {
+      case 'morning':
+        return 'Período Matutino';
+      case 'afternoon':
+        return 'Período Vespertino';
+      case 'night':
+        return 'Período Noturno';
+    }
+  };
+
   if (isLoadingClasses || isLoadingNews) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8 flex items-center justify-center">
@@ -123,17 +129,6 @@ const Index = () => {
       </div>
     );
   }
-
-  const getTurnoText = () => {
-    switch (currentShift) {
-      case 'morning':
-        return 'Aulas do Turno da Manhã';
-      case 'afternoon':
-        return 'Aulas do Turno da Tarde';
-      case 'night':
-        return 'Aulas do Turno da Noite';
-    }
-  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
