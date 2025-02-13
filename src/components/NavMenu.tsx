@@ -1,5 +1,5 @@
 
-import { School, Users, Newspaper, Home, LogOut } from 'lucide-react';
+import { School, Users, Newspaper, Home, LogOut, QrCode } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -18,6 +18,7 @@ const NavMenu = () => {
     { path: '/professors', icon: Users, label: 'Professores' },
     { path: '/classes', icon: School, label: 'Aulas' },
     { path: '/news', icon: Newspaper, label: 'Notícias' },
+    { path: '/links', icon: QrCode, label: 'Links QR' },
   ];
 
   const handleLogout = async () => {

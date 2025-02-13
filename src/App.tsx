@@ -13,6 +13,8 @@ import ClassList from "./pages/ClassList";
 import ClassForm from "./pages/ClassForm";
 import NewsList from "./pages/NewsList";
 import NewsForm from "./pages/NewsForm";
+import LinkList from "./pages/LinkList";
+import LinkForm from "./pages/LinkForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +71,21 @@ const App = () => (
           <Route path="/news/edit/:id" element={
             <ProtectedRoute>
               <NewsForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/links" element={
+            <ProtectedRoute>
+              <LinkList />
+            </ProtectedRoute>
+          } />
+          <Route path="/links/new" element={
+            <ProtectedRoute>
+              <LinkForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/links/edit/:id" element={
+            <ProtectedRoute>
+              <LinkForm />
             </ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
