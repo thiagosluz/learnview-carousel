@@ -1,5 +1,5 @@
 
-import { School, Users, Newspaper, Home } from 'lucide-react';
+import { School, Users, Newspaper } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const NavMenu = () => {
@@ -10,7 +10,6 @@ const NavMenu = () => {
   };
 
   const links = [
-    { path: '/', icon: Home, label: 'Início' },
     { path: '/professors', icon: Users, label: 'Professores' },
     { path: '/classes', icon: School, label: 'Aulas' },
     { path: '/news', icon: Newspaper, label: 'Notícias' },
