@@ -50,6 +50,27 @@ export type Database = {
           },
         ]
       }
+      coordination_links: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          url?: string
+        }
+        Relationships: []
+      }
       news: {
         Row: {
           active: boolean | null
