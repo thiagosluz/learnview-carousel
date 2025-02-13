@@ -78,6 +78,8 @@ export type Database = {
           created_at: string | null
           duration: number
           id: string
+          publish_end: string | null
+          publish_start: string
           title: string
           type: string
         }
@@ -87,6 +89,8 @@ export type Database = {
           created_at?: string | null
           duration?: number
           id?: string
+          publish_end?: string | null
+          publish_start?: string
           title: string
           type: string
         }
@@ -96,6 +100,8 @@ export type Database = {
           created_at?: string | null
           duration?: number
           id?: string
+          publish_end?: string | null
+          publish_start?: string
           title?: string
           type?: string
         }

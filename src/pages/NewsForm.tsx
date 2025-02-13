@@ -38,6 +38,8 @@ const NewsForm = () => {
       content: '',
       duration: 10,
       active: true,
+      publish_start: new Date().toISOString().split('T')[0],
+      publish_end: null,
     },
   });
 
@@ -52,6 +54,8 @@ const NewsForm = () => {
             content: news.content,
             duration: news.duration,
             active: news.active ?? true,
+            publish_start: news.publish_start.split('T')[0],
+            publish_end: news.publish_end ? news.publish_end.split('T')[0] : null,
           });
           if (news.type === 'image') {
             setPreviewUrl(news.content);
@@ -84,6 +88,9 @@ const NewsForm = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
+      const publishStart = new Date(data.publish_start).toISOString();
+      const publishEnd = data.publish_end ? new Date(data.publish_end).toISOString() : null;
+
       if (id) {
         await updateNews(id, {
           title: data.title,
@@ -92,6 +99,8 @@ const NewsForm = () => {
           duration: data.duration,
           active: data.active,
           image: selectedImage ?? undefined,
+          publish_start: publishStart,
+          publish_end: publishEnd,
         });
         toast({
           title: "Notícia atualizada",
@@ -105,6 +114,8 @@ const NewsForm = () => {
           duration: data.duration,
           active: data.active,
           image: selectedImage ?? undefined,
+          publish_start: publishStart,
+          publish_end: publishEnd,
         });
         toast({
           title: "Notícia cadastrada",
@@ -184,6 +195,45 @@ const NewsForm = () => {
                       type="number" 
                       min={1}
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="publish_start"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Data de início da publicação</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="date" 
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="publish_end"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Data de fim da publicação (opcional)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="date" 
+                      {...field}
+                      value={field.value || ''}
+                      onChange={(e) => {
+                        const value = e.target.value || null;
+                        field.onChange(value);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />

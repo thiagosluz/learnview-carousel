@@ -22,4 +22,6 @@ export interface NewsItem {
   content: string;
   duration: number;
   active?: boolean;
+  publish_start: string;
+  publish_end: string | null;
 }

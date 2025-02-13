@@ -4,10 +4,13 @@ import { NewsItem } from '@/types';
 
 export async function fetchActiveNews(): Promise<NewsItem[]> {
   try {
+    const now = new Date().toISOString();
     const { data: news, error } = await supabase
       .from('news')
       .select('*')
       .eq('active', true)
+      .lte('publish_start', now)
+      .or(`publish_end.is.null,publish_end.gt.${now}`)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -73,6 +76,8 @@ export async function createNews({
   duration,
   active,
   image,
+  publish_start,
+  publish_end,
 }: {
   title: string;
   type: 'text' | 'image';
@@ -80,6 +85,8 @@ export async function createNews({
   duration: number;
   active: boolean;
   image?: File;
+  publish_start: string;
+  publish_end?: string | null;
 }): Promise<void> {
   try {
     let finalContent = content;
@@ -96,6 +103,8 @@ export async function createNews({
         content: finalContent,
         duration,
         active,
+        publish_start,
+        publish_end,
       }]);
 
     if (error) throw error;
@@ -114,6 +123,8 @@ export async function updateNews(
     duration,
     active,
     image,
+    publish_start,
+    publish_end,
   }: {
     title: string;
     type: 'text' | 'image';
@@ -121,6 +132,8 @@ export async function updateNews(
     duration: number;
     active: boolean;
     image?: File;
+    publish_start: string;
+    publish_end?: string | null;
   }
 ): Promise<void> {
   try {
@@ -138,6 +151,8 @@ export async function updateNews(
         content: finalContent,
         duration,
         active,
+        publish_start,
+        publish_end,
       })
       .eq('id', id);
 
