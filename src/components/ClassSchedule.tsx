@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from 'react';
 import { Clock, MapPin } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -99,12 +100,12 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                             : 'bg-white hover:bg-secondary/20'
                         }`}
                       >
-                        <div className="flex items-center gap-2 lg:gap-3">
+                        <div className="flex items-center gap-3 lg:gap-4">
                           <div className="flex-shrink-0">
                             <img
                               src={classItem.professor.photo_url}
                               alt={classItem.professor.name}
-                              className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover border-2 shadow-md ${
+                              className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 shadow-md ${
                                 isActive ? 'border-white' : 'border-primary/20'
                               }`}
                             />
