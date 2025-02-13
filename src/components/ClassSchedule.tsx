@@ -90,41 +90,37 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                   return (
                     <div
                       key={classItem.id}
-                      className="p-1.5" // Adicionado padding externo para evitar corte
+                      className={`p-3 lg:p-4 rounded-xl transition-all duration-300 ${
+                        currentClasses.includes(originalIndex)
+                          ? 'bg-primary text-white scale-[1.02] shadow-lg'
+                          : 'bg-white hover:bg-secondary/20'
+                      }`}
                     >
-                      <div
-                        className={`p-2.5 lg:p-3.5 rounded-xl transition-all duration-300 ${
-                          currentClasses.includes(originalIndex)
-                            ? 'bg-primary text-white scale-[1.02] shadow-lg'
-                            : 'bg-white hover:bg-secondary/20'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0">
-                            <img
-                              src={classItem.professor.photo_url}
-                              alt={classItem.professor.name}
-                              className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 shadow-md ${
-                                currentClasses.includes(originalIndex) ? 'border-white' : 'border-primary/20'
-                              }`}
-                            />
+                      <div className="flex items-center gap-3 lg:gap-4">
+                        <div className="flex-shrink-0">
+                          <img
+                            src={classItem.professor.photo_url}
+                            alt={classItem.professor.name}
+                            className={`w-14 h-14 rounded-full object-cover border-2 shadow-md ${
+                              currentClasses.includes(originalIndex) ? 'border-white' : 'border-primary/20'
+                            }`}
+                          />
+                        </div>
+                        <div className="flex-grow min-w-0">
+                          <div className="flex items-center gap-2 text-sm lg:text-base font-semibold">
+                            <Clock className="w-4 h-4 flex-shrink-0" />
+                            <span>{classItem.start_time} - {classItem.end_time}</span>
                           </div>
-                          <div className="flex-grow min-w-0">
-                            <div className="flex items-center gap-2 text-sm lg:text-base font-semibold">
-                              <Clock className="w-4 h-4 flex-shrink-0" />
-                              <span>{classItem.start_time} - {classItem.end_time}</span>
-                            </div>
-                            <h3 className="text-base lg:text-lg font-bold mt-1 break-words">{classItem.subject}</h3>
-                            <div className="flex items-center justify-between mt-1">
-                              <span className="text-sm break-words">{classItem.professor.name}</span>
-                              <div className={`flex items-center gap-1 ml-2 px-2 py-0.5 rounded-lg ${
-                                currentClasses.includes(originalIndex)
-                                  ? 'bg-white/20 text-white'
-                                  : 'bg-primary/10 text-primary'
-                              }`}>
-                                <MapPin className="w-4 h-4 flex-shrink-0" />
-                                <span className="text-sm font-medium">{classItem.lab}</span>
-                              </div>
+                          <h3 className="text-base lg:text-lg font-bold mt-1 break-words">{classItem.subject}</h3>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-sm break-words">{classItem.professor.name}</span>
+                            <div className={`flex items-center gap-1 ml-2 px-2 py-0.5 rounded-lg ${
+                              currentClasses.includes(originalIndex)
+                                ? 'bg-white/20 text-white'
+                                : 'bg-primary/10 text-primary'
+                            }`}>
+                              <MapPin className="w-4 h-4 flex-shrink-0" />
+                              <span className="text-sm font-medium">{classItem.lab}</span>
                             </div>
                           </div>
                         </div>
