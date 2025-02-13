@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -139,7 +140,6 @@ const Index = () => {
       <div className="max-w-[2100px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
           <div className="lg:h-full flex flex-col">
-            <CoordinationInfo />
             {newsError ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -152,21 +152,26 @@ const Index = () => {
               <NewsCarousel items={news || []} />
             )}
           </div>
-          <div className="lg:h-full flex flex-col">
-            {classesError ? (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Erro</AlertTitle>
-                <AlertDescription>
-                  Não foi possível carregar os horários. Por favor, tente novamente mais tarde.
-                </AlertDescription>
-              </Alert>
-            ) : (
-              <ClassSchedule 
-                classes={filteredClasses}
-                date={`${format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })} - ${getTurnoText()}`}
-              />
-            )}
+          <div className="lg:h-full flex flex-row gap-4">
+            <div className="flex-1">
+              {classesError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Erro</AlertTitle>
+                  <AlertDescription>
+                    Não foi possível carregar os horários. Por favor, tente novamente mais tarde.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <ClassSchedule 
+                  classes={filteredClasses}
+                  date={`${format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })} - ${getTurnoText()}`}
+                />
+              )}
+            </div>
+            <div className="w-52">
+              <CoordinationInfo />
+            </div>
           </div>
         </div>
       </div>
