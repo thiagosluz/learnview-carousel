@@ -23,23 +23,23 @@ const CoordinationInfo = () => {
   });
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-lg p-4 mb-4">
-      <div className="flex items-center gap-6">
+    <div className="w-full bg-white rounded-2xl shadow-lg p-3 lg:p-4 mb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4">
         <img
           src="https://scontent.frec10-1.fna.fbcdn.net/v/t39.30808-6/469317382_505665579174481_5541984506667947629_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeH3UddZ5zzNq7TXOx8VZN56sgp7lNDTSUayCnuU0NNJRot-UmUaGYetQ3qNEyXverT3158ppEI0cNMFNO6cHk_L&_nc_ohc=43EFwFU8Qf4Q7kNvgGuuacY&_nc_zt=23&_nc_ht=scontent.frec10-1.fna&_nc_gid=An7C7M86beHmfHOGensTgG-&oh=00_AYBZFSmSVMYJzTbp1fGugVKxMMrhcyRcRDz80je_dG8P1w&oe=67B2D234"
           alt="Logo Coordenação"
-          className="w-16 h-16 rounded-full object-cover shadow-md"
+          className="w-14 h-14 lg:w-16 lg:h-16 rounded-full object-cover shadow-md"
         />
-        <div className="flex-1 flex justify-around">
+        <div className="flex-1 grid grid-cols-2 sm:flex sm:justify-around gap-3 sm:gap-4 w-full">
           {links?.map((link) => (
-            <div key={link.id} className="flex flex-col items-center gap-2">
+            <div key={link.id} className="flex flex-col items-center gap-1.5 sm:gap-2">
               <QRCodeSVG
                 value={link.url}
-                size={64}
+                size={56}
                 level="L"
                 className="bg-white p-1 rounded-lg"
               />
-              <span className="text-sm font-medium text-gray-600">{link.name}</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-600 text-center">{link.name}</span>
             </div>
           ))}
         </div>
