@@ -25,6 +25,25 @@ export async function fetchActiveNews(): Promise<NewsItem[]> {
   }
 }
 
+export async function fetchAllNews(): Promise<NewsItem[]> {
+  try {
+    const { data: news, error } = await supabase
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    
+    return news.map(item => ({
+      ...item,
+      type: item.type as 'text' | 'image'
+    }));
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    throw new Error('Não foi possível carregar as notícias');
+  }
+}
+
 export async function fetchNews(id: string): Promise<NewsItem> {
   try {
     const { data: news, error } = await supabase
