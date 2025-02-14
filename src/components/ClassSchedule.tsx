@@ -112,10 +112,10 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                           </div>
                           <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-1.5 text-xs lg:text-sm font-semibold">
-                              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
-                              <span>{classItem.start_time} - {classItem.end_time}</span>
+                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{classItem.lab}</span>
                             </div>
-                            <h3 className="text-sm lg:text-base font-bold mt-0.5 break-words">{classItem.lab}</h3>
+                            <h3 className="text-sm lg:text-base font-bold mt-0.5 break-words">{classItem.subject}</h3>
                             <div className="flex items-center justify-between mt-0.5">
                               <span className="text-xs lg:text-sm break-words">{classItem.professor.name}</span>
                               <div className={`flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded-lg ${
@@ -123,8 +123,8 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                                   ? 'bg-white/20 text-white'
                                   : 'bg-primary/10 text-primary'
                               }`}>
-                                <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                                <span className="text-xs lg:text-sm font-medium">{classItem.subject}</span>
+                                <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                                <span className="text-xs lg:text-sm font-medium">{classItem.start_time} - {classItem.end_time}</span>
                               </div>
                             </div>
                           </div>
