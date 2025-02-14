@@ -91,42 +91,40 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
                   return (
                     <div
                       key={classItem.id}
-                      className={`${isActive ? 'scale-[1.02]' : ''} transition-all duration-300`}
+                      className={`${isActive ? 'p-0.5' : ''}`}
                     >
                       <div
-                        className={`p-4 rounded-xl transition-all duration-300 ${
+                        className={`p-2 lg:p-3 rounded-xl transition-all duration-300 ${
                           isActive
-                            ? 'bg-[#1A2433] text-white'
-                            : 'bg-[#1A243366] hover:bg-[#1A243399]'
+                            ? 'bg-primary text-white scale-[1.02] shadow-lg'
+                            : 'bg-white hover:bg-secondary/20'
                         }`}
                       >
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 lg:gap-4">
                           <div className="flex-shrink-0">
                             <img
                               src={classItem.professor.photo_url}
                               alt={classItem.professor.name}
-                              className={`w-14 h-14 rounded-full object-cover ring-2 ${
-                                isActive ? 'ring-[#33C3F0]' : 'ring-[#33C3F0]/30'
+                              className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 shadow-md ${
+                                isActive ? 'border-white' : 'border-primary/20'
                               }`}
                             />
                           </div>
                           <div className="flex-grow min-w-0">
-                            <h3 className="text-lg font-semibold mb-1">{classItem.subject}</h3>
-                            <p className={`text-sm ${isActive ? 'text-gray-200' : 'text-gray-300'}`}>
-                              {classItem.professor.name}
-                            </p>
-                            <div className="flex items-center justify-between mt-2">
-                              <div className="flex items-center gap-2 text-sm">
-                                <Clock className="w-4 h-4 text-[#33C3F0]" />
-                                <span className={isActive ? 'text-[#33C3F0]' : 'text-gray-300'}>
-                                  {classItem.start_time} - {classItem.end_time}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 text-sm">
-                                <MapPin className="w-4 h-4 text-[#33C3F0]" />
-                                <span className={isActive ? 'text-[#33C3F0]' : 'text-gray-300'}>
-                                  {classItem.lab}
-                                </span>
+                            <div className="flex items-center gap-1.5 text-xs lg:text-sm font-semibold">
+                              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{classItem.start_time} - {classItem.end_time}</span>
+                            </div>
+                            <h3 className="text-sm lg:text-base font-bold mt-0.5 break-words">{classItem.subject}</h3>
+                            <div className="flex items-center justify-between mt-0.5">
+                              <span className="text-xs lg:text-sm break-words">{classItem.professor.name}</span>
+                              <div className={`flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded-lg ${
+                                isActive
+                                  ? 'bg-white/20 text-white'
+                                  : 'bg-primary/10 text-primary'
+                              }`}>
+                                <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                                <span className="text-xs lg:text-sm font-medium">{classItem.lab}</span>
                               </div>
                             </div>
                           </div>
@@ -142,12 +140,12 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
       </div>
 
       {classGroups.length > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex justify-center gap-2 mt-2">
           {classGroups.map((_, index) => (
             <div
               key={index}
               className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                index === 0 ? 'bg-[#33C3F0]' : 'bg-[#33C3F0]/30'
+                index === 0 ? 'bg-primary' : 'bg-primary/30'
               }`}
             />
           ))}
