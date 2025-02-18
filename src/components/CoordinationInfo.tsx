@@ -28,7 +28,7 @@ const CoordinationInfo = () => {
       <div className="flex items-center gap-6">
         <Link to="/professors">
           <img
-            src="https://tquredrvexziwipkonhn.supabase.co/storage/v1/object/public/images/logo.png"
+            src="https://tquredrvexziwipkonhn.supabase.co/storage/v1/object/public/images/nova_logo.png"
             alt="Logo Coordenação"
             className="w-24 h-24 rounded-full object-cover shadow-md hover:opacity-80 transition-opacity cursor-pointer"
           />
