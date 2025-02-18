@@ -1,11 +1,11 @@
 
-# Use a imagem oficial do Node.js como base
-FROM node:20-alpine
+# Estágio de build
+FROM node:20-alpine as build
 
-# Define o diretório de trabalho dentro do container
+# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos de package.json primeiro para aproveitar o cache do Docker
+# Copia os arquivos de package.json
 COPY package*.json ./
 
 # Instala as dependências
@@ -17,8 +17,14 @@ COPY . .
 # Compila o projeto
 RUN npm run build
 
-# Expõe a porta 5173 que o Vite usa por padrão
-EXPOSE 5173
+# Estágio de produção
+FROM nginx:alpine
 
-# Comando para iniciar a aplicação
-CMD ["npm", "run", "dev", "--", "--host"]
+# Copia os arquivos buildados para o diretório do Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expõe a porta 80
+EXPOSE 80
+
+# Inicia o Nginx
+CMD ["nginx", "-g", "daemon off;"]
