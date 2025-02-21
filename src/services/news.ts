@@ -195,15 +195,21 @@ export async function deleteNews(id: string): Promise<void> {
 
     // Se for uma notícia com imagem, exclui a imagem do storage
     if (news && news.type === 'image' && news.content) {
-      const fileName = news.content.split('/').pop();
-      if (fileName) {
-        const { error: storageError } = await supabase.storage
-          .from('news-images')
-          .remove([fileName]);
+      try {
+        // A URL do Supabase tem o formato: https://<project>.supabase.co/storage/v1/object/public/news-images/<filename>
+        const urlParts = news.content.split('/news-images/');
+        if (urlParts.length > 1) {
+          const fileName = urlParts[1];
+          const { error: storageError } = await supabase.storage
+            .from('news-images')
+            .remove([fileName]);
 
-        if (storageError) {
-          console.error('Error deleting image from storage:', storageError);
+          if (storageError) {
+            console.error('Error deleting image from storage:', storageError);
+          }
         }
+      } catch (storageError) {
+        console.error('Error parsing URL or deleting from storage:', storageError);
       }
     }
 
