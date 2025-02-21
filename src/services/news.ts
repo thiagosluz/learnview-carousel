@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { NewsItem } from '@/types';
 
@@ -195,27 +196,40 @@ export async function deleteNews(id: string): Promise<void> {
     // Se for uma notícia com imagem, exclui a imagem do storage
     if (news && news.type === 'image' && news.content) {
       try {
-        // Extrai o nome do arquivo da URL
-        const parts = news.content.split('/');
-        const fileName = parts[parts.length - 1].split('?')[0];
+        // Extrai o nome do arquivo da URL completa
+        const fileUrl = new URL(news.content);
+        const pathParts = fileUrl.pathname.split('/');
+        const fileName = pathParts[pathParts.length - 1];
         
         if (fileName) {
           console.log('Attempting to delete file:', fileName);
           
-          // Tenta excluir o arquivo diretamente
-          const { error: storageError } = await supabase.storage
+          // Tenta excluir o arquivo usando o caminho completo
+          const { data, error: storageError } = await supabase.storage
             .from('news-images')
             .remove([fileName]);
 
           if (storageError) {
-            console.error('Error deleting image from storage:', storageError);
+            console.error('Storage error:', storageError);
             throw storageError;
           }
+
+          console.log('Storage response:', data);
           
-          console.log('Image deletion completed');
+          // Verifica se a exclusão foi bem-sucedida
+          const { data: checkFile } = await supabase.storage
+            .from('news-images')
+            .list();
+            
+          const fileStillExists = checkFile?.some(file => file.name === fileName);
+          if (!fileStillExists) {
+            console.log('Image successfully deleted from storage');
+          } else {
+            throw new Error('Failed to delete image from storage');
+          }
         }
       } catch (storageError) {
-        console.error('Error deleting from storage:', storageError);
+        console.error('Error in storage operation:', storageError);
         // Continua com a exclusão da notícia mesmo se houver erro ao excluir a imagem
       }
     }
