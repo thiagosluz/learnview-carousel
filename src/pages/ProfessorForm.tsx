@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -23,6 +24,40 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
+
+const processImage = async (file: File): Promise<File> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = Math.max(img.width, img.height);
+      canvas.width = size;
+      canvas.height = size;
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not get canvas context');
+      
+      // Preenche o canvas com fundo branco
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Calcula as posições para centralizar a imagem
+      const x = (size - img.width) / 2;
+      const y = (size - img.height) / 2;
+      
+      // Desenha a imagem centralizada
+      ctx.drawImage(img, x, y, img.width, img.height);
+      
+      // Converte o canvas para blob
+      canvas.toBlob((blob) => {
+        if (!blob) throw new Error('Could not convert canvas to blob');
+        const processedFile = new File([blob], file.name, { type: 'image/png' });
+        resolve(processedFile);
+      }, 'image/png');
+    };
+    img.src = URL.createObjectURL(file);
+  });
+};
 
 const ProfessorForm = () => {
   const { id } = useParams();
@@ -60,15 +95,26 @@ const ProfessorForm = () => {
     }
   }, [id, form, navigate, toast]);
 
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      form.setValue('photo', file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const processedFile = await processImage(file);
+        form.setValue('photo', processedFile);
+        
+        // Atualiza o preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewUrl(reader.result as string);
+        };
+        reader.readAsDataURL(processedFile);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Erro ao processar imagem",
+          description: "Não foi possível processar a imagem selecionada.",
+        });
+      }
     }
   };
 
@@ -144,7 +190,7 @@ const ProfessorForm = () => {
                     <img
                       src={previewUrl}
                       alt="Preview"
-                      className="w-32 h-32 rounded-lg object-cover"
+                      className="w-32 h-32 rounded-lg object-contain bg-white"
                     />
                   )}
                   <Input
