@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { NewsItem } from '@/types';
 
@@ -203,43 +202,21 @@ export async function deleteNews(id: string): Promise<void> {
         if (fileName) {
           console.log('Attempting to delete file:', fileName);
           
-          // Primeiro, verifica se o arquivo existe
-          const { data: exists } = await supabase.storage
+          // Tenta excluir o arquivo diretamente
+          const { error: storageError } = await supabase.storage
             .from('news-images')
-            .list('', {
-              search: fileName
-            });
+            .remove([fileName]);
 
-          console.log('File exists check:', exists);
-          
-          if (exists && exists.length > 0) {
-            // Tenta excluir o arquivo
-            const { error: storageError } = await supabase.storage
-              .from('news-images')
-              .remove([`${fileName}`]);
-
-            if (storageError) {
-              console.error('Error deleting image from storage:', storageError);
-            } else {
-              // Verifica se a exclusão foi bem-sucedida
-              const { data: checkExists } = await supabase.storage
-                .from('news-images')
-                .list('', {
-                  search: fileName
-                });
-              
-              if (!checkExists || checkExists.length === 0) {
-                console.log('File successfully deleted from storage');
-              } else {
-                console.error('File still exists after deletion attempt');
-              }
-            }
-          } else {
-            console.error('File not found in bucket:', fileName);
+          if (storageError) {
+            console.error('Error deleting image from storage:', storageError);
+            throw storageError;
           }
+          
+          console.log('Image deletion completed');
         }
       } catch (storageError) {
         console.error('Error deleting from storage:', storageError);
+        // Continua com a exclusão da notícia mesmo se houver erro ao excluir a imagem
       }
     }
 
