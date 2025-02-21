@@ -197,18 +197,21 @@ export async function deleteNews(id: string): Promise<void> {
     if (news && news.type === 'image' && news.content) {
       try {
         // Extrai o UUID do arquivo da URL
-        const fileUUID = news.content.match(/[0-9a-fA-F-]{36}\.[a-zA-Z]+$/)?.[0];
+        const regex = /([0-9a-fA-F-]{36}\.[a-zA-Z]+)(?:\?.*)?$/;
+        const match = news.content.match(regex);
+        const fileUUID = match?.[1];
         
         if (fileUUID) {
           console.log('Attempting to delete file:', fileUUID);
           
-          const { error: storageError } = await supabase.storage
+          const { data, error: storageError } = await supabase.storage
             .from('news-images')
             .remove([fileUUID]);
 
           if (storageError) {
             console.error('Error deleting image from storage:', storageError);
           } else {
+            console.log('Storage response:', data);
             console.log('Image successfully deleted from storage');
           }
         } else {
