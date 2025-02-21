@@ -184,12 +184,36 @@ export async function updateNews(
 
 export async function deleteNews(id: string): Promise<void> {
   try {
-    const { error } = await supabase
+    // Primeiro, busca a notícia para verificar se é do tipo imagem
+    const { data: news, error: fetchError } = await supabase
+      .from('news')
+      .select('type, content')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Se for uma notícia com imagem, exclui a imagem do storage
+    if (news && news.type === 'image' && news.content) {
+      const fileName = news.content.split('/').pop();
+      if (fileName) {
+        const { error: storageError } = await supabase.storage
+          .from('news-images')
+          .remove([fileName]);
+
+        if (storageError) {
+          console.error('Error deleting image from storage:', storageError);
+        }
+      }
+    }
+
+    // Exclui a notícia do banco de dados
+    const { error: deleteError } = await supabase
       .from('news')
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (deleteError) throw deleteError;
   } catch (error) {
     console.error('Error deleting news:', error);
     throw new Error('Não foi possível excluir a notícia');
