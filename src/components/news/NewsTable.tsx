@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 import { NewsItem } from '@/types';
 import { NewsTableRow } from './NewsTableRow';
 
@@ -13,13 +14,29 @@ interface NewsTableProps {
   news: NewsItem[];
   onDelete: (news: NewsItem) => Promise<void>;
   onDeleteCancel: () => void;
+  selectedNews: Set<string>;
+  onToggleSelection: (id: string) => void;
+  onToggleAll: () => void;
 }
 
-export const NewsTable = ({ news, onDelete, onDeleteCancel }: NewsTableProps) => {
+export const NewsTable = ({ 
+  news, 
+  onDelete, 
+  onDeleteCancel, 
+  selectedNews,
+  onToggleSelection,
+  onToggleAll
+}: NewsTableProps) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead className="w-[50px]">
+            <Checkbox
+              checked={news.length > 0 && news.every(n => selectedNews.has(n.id))}
+              onCheckedChange={onToggleAll}
+            />
+          </TableHead>
           <TableHead>Título</TableHead>
           <TableHead>Tipo</TableHead>
           <TableHead>Duração (segundos)</TableHead>
@@ -36,6 +53,8 @@ export const NewsTable = ({ news, onDelete, onDeleteCancel }: NewsTableProps) =>
             news={item}
             onDelete={() => onDelete(item)}
             onDeleteCancel={onDeleteCancel}
+            isSelected={selectedNews.has(item.id)}
+            onToggleSelection={() => onToggleSelection(item.id)}
           />
         ))}
       </TableBody>

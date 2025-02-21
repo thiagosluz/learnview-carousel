@@ -5,6 +5,7 @@ import { ptBR } from 'date-fns/locale';
 import { Pencil } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 import { NewsItem } from '@/types';
 import { DeleteNewsDialog } from './DeleteNewsDialog';
 
@@ -12,9 +13,17 @@ interface NewsTableRowProps {
   news: NewsItem;
   onDelete: () => Promise<void>;
   onDeleteCancel: () => void;
+  isSelected: boolean;
+  onToggleSelection: () => void;
 }
 
-export const NewsTableRow = ({ news, onDelete, onDeleteCancel }: NewsTableRowProps) => {
+export const NewsTableRow = ({ 
+  news, 
+  onDelete, 
+  onDeleteCancel, 
+  isSelected,
+  onToggleSelection 
+}: NewsTableRowProps) => {
   const getPublicationStatus = (news: NewsItem) => {
     const now = new Date();
     const publishStart = new Date(news.publish_start);
@@ -39,6 +48,12 @@ export const NewsTableRow = ({ news, onDelete, onDeleteCancel }: NewsTableRowPro
 
   return (
     <TableRow>
+      <TableCell>
+        <Checkbox
+          checked={isSelected}
+          onCheckedChange={onToggleSelection}
+        />
+      </TableCell>
       <TableCell>{news.title}</TableCell>
       <TableCell>
         {news.type === 'text' ? 'Texto' : 'Imagem'}
