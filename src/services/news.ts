@@ -196,44 +196,47 @@ export async function deleteNews(id: string): Promise<void> {
     // Se for uma notícia com imagem, exclui a imagem do storage
     if (news && news.type === 'image' && news.content) {
       try {
-        // Extrai o nome do arquivo da URL removendo a query string
-        const url = new URL(news.content);
-        const pathname = url.pathname;
-        const fileName = pathname.split('/').pop();
+        // Extrai o nome do arquivo da URL
+        const parts = news.content.split('/');
+        const fileName = parts[parts.length - 1].split('?')[0];
         
         if (fileName) {
           console.log('Attempting to delete file:', fileName);
           
-          // Lista os arquivos no bucket para confirmar que o arquivo existe
-          const { data: files } = await supabase.storage
+          // Primeiro, verifica se o arquivo existe
+          const { data: exists } = await supabase.storage
             .from('news-images')
-            .list();
-          
-          console.log('Files in bucket:', files);
-          
-          const { error: storageError } = await supabase.storage
-            .from('news-images')
-            .remove([fileName]);
+            .list('', {
+              search: fileName
+            });
 
-          if (storageError) {
-            console.error('Error deleting image from storage:', storageError);
-          } else {
-            // Verifica se o arquivo ainda existe após a tentativa de exclusão
-            const { data: remainingFiles } = await supabase.storage
+          console.log('File exists check:', exists);
+          
+          if (exists && exists.length > 0) {
+            // Tenta excluir o arquivo
+            const { error: storageError } = await supabase.storage
               .from('news-images')
-              .list();
-            
-            console.log('Remaining files after deletion:', remainingFiles);
-            
-            const fileStillExists = remainingFiles?.some(file => file.name === fileName);
-            if (fileStillExists) {
-              console.error('File still exists after deletion attempt');
+              .remove([`${fileName}`]);
+
+            if (storageError) {
+              console.error('Error deleting image from storage:', storageError);
             } else {
-              console.log('File successfully deleted from storage');
+              // Verifica se a exclusão foi bem-sucedida
+              const { data: checkExists } = await supabase.storage
+                .from('news-images')
+                .list('', {
+                  search: fileName
+                });
+              
+              if (!checkExists || checkExists.length === 0) {
+                console.log('File successfully deleted from storage');
+              } else {
+                console.error('File still exists after deletion attempt');
+              }
             }
+          } else {
+            console.error('File not found in bucket:', fileName);
           }
-        } else {
-          console.error('Could not extract filename from URL:', news.content);
         }
       } catch (storageError) {
         console.error('Error deleting from storage:', storageError);
