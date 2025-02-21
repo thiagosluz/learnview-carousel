@@ -196,26 +196,44 @@ export async function deleteNews(id: string): Promise<void> {
     // Se for uma notícia com imagem, exclui a imagem do storage
     if (news && news.type === 'image' && news.content) {
       try {
-        // Extrai o UUID do arquivo da URL
-        const regex = /([0-9a-fA-F-]{36}\.[a-zA-Z]+)(?:\?.*)?$/;
-        const match = news.content.match(regex);
-        const fileUUID = match?.[1];
+        // Extrai o nome do arquivo da URL removendo a query string
+        const url = new URL(news.content);
+        const pathname = url.pathname;
+        const fileName = pathname.split('/').pop();
         
-        if (fileUUID) {
-          console.log('Attempting to delete file:', fileUUID);
+        if (fileName) {
+          console.log('Attempting to delete file:', fileName);
           
-          const { data, error: storageError } = await supabase.storage
+          // Lista os arquivos no bucket para confirmar que o arquivo existe
+          const { data: files } = await supabase.storage
             .from('news-images')
-            .remove([fileUUID]);
+            .list();
+          
+          console.log('Files in bucket:', files);
+          
+          const { error: storageError } = await supabase.storage
+            .from('news-images')
+            .remove([fileName]);
 
           if (storageError) {
             console.error('Error deleting image from storage:', storageError);
           } else {
-            console.log('Storage response:', data);
-            console.log('Image successfully deleted from storage');
+            // Verifica se o arquivo ainda existe após a tentativa de exclusão
+            const { data: remainingFiles } = await supabase.storage
+              .from('news-images')
+              .list();
+            
+            console.log('Remaining files after deletion:', remainingFiles);
+            
+            const fileStillExists = remainingFiles?.some(file => file.name === fileName);
+            if (fileStillExists) {
+              console.error('File still exists after deletion attempt');
+            } else {
+              console.log('File successfully deleted from storage');
+            }
           }
         } else {
-          console.error('Could not extract file UUID from URL:', news.content);
+          console.error('Could not extract filename from URL:', news.content);
         }
       } catch (storageError) {
         console.error('Error deleting from storage:', storageError);
