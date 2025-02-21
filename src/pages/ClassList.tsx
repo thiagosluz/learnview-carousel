@@ -5,6 +5,7 @@ import { Pencil, Trash2, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 import NavMenu from '@/components/NavMenu';
 import {
   Table,
@@ -51,6 +52,8 @@ const ClassList = () => {
   const { toast } = useToast();
   const [classToDelete, setClassToDelete] = useState<Class | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedClasses, setSelectedClasses] = useState<Set<string>>(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: classes = [], isLoading, refetch } = useQuery<Class[]>({
     queryKey: ['classes'],
@@ -72,24 +75,71 @@ const ClassList = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentClasses = classes.slice(startIndex, endIndex);
 
-  const handleDelete = async () => {
-    if (!classToDelete) return;
+  const toggleClassSelection = (classId: string) => {
+    const newSelected = new Set(selectedClasses);
+    if (newSelected.has(classId)) {
+      newSelected.delete(classId);
+    } else {
+      newSelected.add(classId);
+    }
+    setSelectedClasses(newSelected);
+  };
 
+  const toggleAllCurrentPage = () => {
+    const newSelected = new Set(selectedClasses);
+    const allSelected = currentClasses.every(c => selectedClasses.has(c.id));
+    
+    if (allSelected) {
+      // Remove todas as seleções da página atual
+      currentClasses.forEach(c => newSelected.delete(c.id));
+    } else {
+      // Adiciona todas as aulas da página atual
+      currentClasses.forEach(c => newSelected.add(c.id));
+    }
+    
+    setSelectedClasses(newSelected);
+  };
+
+  const handleDelete = async () => {
+    if (classToDelete) {
+      try {
+        await deleteClass(classToDelete.id);
+        toast({
+          title: "Aula excluída",
+          description: "A aula foi excluída com sucesso.",
+        });
+        refetch();
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Erro ao excluir aula",
+          description: error instanceof Error ? error.message : "Ocorreu um erro ao excluir a aula",
+        });
+      } finally {
+        setClassToDelete(null);
+      }
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    setIsDeleting(true);
     try {
-      await deleteClass(classToDelete.id);
+      const deletePromises = Array.from(selectedClasses).map(id => deleteClass(id));
+      await Promise.all(deletePromises);
       toast({
-        title: "Aula excluída",
-        description: "A aula foi excluída com sucesso.",
+        title: "Aulas excluídas",
+        description: `${selectedClasses.size} aulas foram excluídas com sucesso.`,
       });
+      setSelectedClasses(new Set());
       refetch();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Erro ao excluir aula",
-        description: error instanceof Error ? error.message : "Ocorreu um erro ao excluir a aula",
+        title: "Erro ao excluir aulas",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao excluir as aulas",
       });
     } finally {
-      setClassToDelete(null);
+      setIsDeleting(false);
     }
   };
 
@@ -106,7 +156,33 @@ const ClassList = () => {
       <NavMenu />
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Aulas</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold">Aulas</h1>
+            {selectedClasses.size > 0 && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" disabled={isDeleting}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Excluir selecionadas ({selectedClasses.size})
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirmar exclusão em massa</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza que deseja excluir {selectedClasses.size} aulas? Esta ação não pode ser desfeita.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteSelected}>
+                      Excluir
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
           <Link to="/classes/new">
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -119,6 +195,12 @@ const ClassList = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[50px]">
+                  <Checkbox
+                    checked={currentClasses.length > 0 && currentClasses.every(c => selectedClasses.has(c.id))}
+                    onCheckedChange={toggleAllCurrentPage}
+                  />
+                </TableHead>
                 <TableHead>Dia</TableHead>
                 <TableHead>Horário</TableHead>
                 <TableHead>Professor</TableHead>
@@ -130,6 +212,12 @@ const ClassList = () => {
             <TableBody>
               {currentClasses.map((class_) => (
                 <TableRow key={class_.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedClasses.has(class_.id)}
+                      onCheckedChange={() => toggleClassSelection(class_.id)}
+                    />
+                  </TableCell>
                   <TableCell>{DIAS_SEMANA[class_.day_of_week]}</TableCell>
                   <TableCell>{class_.start_time} - {class_.end_time}</TableCell>
                   <TableCell className="flex items-center gap-2">
