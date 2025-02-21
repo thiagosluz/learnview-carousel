@@ -196,7 +196,7 @@ export async function deleteNews(id: string): Promise<void> {
     // Se for uma notícia com imagem, exclui a imagem do storage
     if (news && news.type === 'image' && news.content) {
       try {
-        // Extrai o nome do arquivo da URL completa
+        // Extrai o nome do arquivo da URL
         const fileUrl = new URL(news.content);
         const pathParts = fileUrl.pathname.split('/');
         const fileName = pathParts[pathParts.length - 1];
@@ -204,8 +204,15 @@ export async function deleteNews(id: string): Promise<void> {
         if (fileName) {
           console.log('Attempting to delete file:', fileName);
           
-          // Tenta excluir o arquivo usando o caminho completo
-          const { data, error: storageError } = await supabase.storage
+          // Lista os arquivos para verificar se existe
+          const { data: files } = await supabase.storage
+            .from('news-images')
+            .list();
+          
+          console.log('Files in bucket:', files);
+          
+          // Tenta excluir o arquivo
+          const { error: storageError } = await supabase.storage
             .from('news-images')
             .remove([fileName]);
 
@@ -214,18 +221,18 @@ export async function deleteNews(id: string): Promise<void> {
             throw storageError;
           }
 
-          console.log('Storage response:', data);
-          
-          // Verifica se a exclusão foi bem-sucedida
-          const { data: checkFile } = await supabase.storage
+          // Verifica se o arquivo foi realmente excluído
+          const { data: remainingFiles } = await supabase.storage
             .from('news-images')
             .list();
             
-          const fileStillExists = checkFile?.some(file => file.name === fileName);
-          if (!fileStillExists) {
-            console.log('Image successfully deleted from storage');
+          console.log('Remaining files after deletion:', remainingFiles);
+          
+          const fileStillExists = remainingFiles?.some(file => file.name === fileName);
+          if (fileStillExists) {
+            console.log('File still exists after deletion attempt');
           } else {
-            throw new Error('Failed to delete image from storage');
+            console.log('File successfully deleted');
           }
         }
       } catch (storageError) {
