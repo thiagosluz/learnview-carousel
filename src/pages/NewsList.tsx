@@ -40,7 +40,8 @@ const NewsList = () => {
     active: 0,
     inactive: 0,
     expired: 0,
-    scheduled: 0
+    scheduled: 0,
+    displaying: 0
   });
 
   const { data: news = [], isLoading, refetch } = useQuery<NewsItem[]>({
@@ -79,8 +80,16 @@ const NewsList = () => {
           acc.scheduled++;
         }
 
+        // Verificar se está sendo exibida na página inicial
+        // Notícia sendo exibida = ativa + dentro do período de publicação (já começou e não expirou)
+        if (item.active && 
+            item.publish_start <= now && 
+            (!item.publish_end || item.publish_end > now)) {
+          acc.displaying++;
+        }
+
         return acc;
-      }, { active: 0, inactive: 0, expired: 0, scheduled: 0 });
+      }, { active: 0, inactive: 0, expired: 0, scheduled: 0, displaying: 0 });
 
       setNewsStats(stats);
     }
@@ -198,7 +207,15 @@ const NewsList = () => {
           <NewsListHeader />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <Card className="bg-primary/10 border-primary/20">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Exibindo Agora</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{newsStats.displaying}</div>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Notícias Ativas</CardTitle>
