@@ -75,6 +75,14 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white p-8 rounded-lg shadow-lg">
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/lovable-uploads/98e8b175-8e94-4ac4-9cea-97e855cc8421.png" 
+              alt="Logo" 
+              className="h-24 w-auto"
+            />
+          </div>
+          
           <h1 className="text-2xl font-bold text-center mb-6">
             {isSignUp ? 'Criar conta' : 'Entrar'}
           </h1>
