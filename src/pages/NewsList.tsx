@@ -1,7 +1,7 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Trash2 } from 'lucide-react';
+import { Trash2, BarChart3 } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import NavMenu from '@/components/NavMenu';
 import { fetchAllNews, deleteNews } from '@/services';
@@ -21,6 +21,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,6 +36,12 @@ const NewsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedNews, setSelectedNews] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
+  const [newsStats, setNewsStats] = useState({
+    active: 0,
+    inactive: 0,
+    expired: 0,
+    scheduled: 0
+  });
 
   const { data: news = [], isLoading, refetch } = useQuery<NewsItem[]>({
     queryKey: ['news'],
@@ -45,6 +57,34 @@ const NewsList = () => {
       }
     }
   });
+
+  useEffect(() => {
+    if (news.length > 0) {
+      const now = new Date().toISOString();
+      const stats = news.reduce((acc, item) => {
+        // Verificar se está ativa/inativa
+        if (item.active) {
+          acc.active++;
+        } else {
+          acc.inactive++;
+        }
+
+        // Verificar se está expirada
+        if (item.publish_end && item.publish_end < now) {
+          acc.expired++;
+        }
+
+        // Verificar se está agendada (data de início no futuro)
+        if (item.publish_start > now) {
+          acc.scheduled++;
+        }
+
+        return acc;
+      }, { active: 0, inactive: 0, expired: 0, scheduled: 0 });
+
+      setNewsStats(stats);
+    }
+  }, [news]);
 
   const totalPages = Math.ceil(news.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -156,6 +196,41 @@ const NewsList = () => {
             )}
           </div>
           <NewsListHeader />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Notícias Ativas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{newsStats.active}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Notícias Inativas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{newsStats.inactive}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Notícias Expiradas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{newsStats.expired}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Notícias Agendadas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{newsStats.scheduled}</div>
+            </CardContent>
+          </Card>
         </div>
         
         <div className="bg-white rounded-lg shadow">
