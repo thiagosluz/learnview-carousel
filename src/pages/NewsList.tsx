@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trash2, BarChart3 } from 'lucide-react';
@@ -63,25 +62,20 @@ const NewsList = () => {
     if (news.length > 0) {
       const now = new Date().toISOString();
       const stats = news.reduce((acc, item) => {
-        // Verificar se está ativa/inativa
         if (item.active) {
           acc.active++;
         } else {
           acc.inactive++;
         }
 
-        // Verificar se está expirada
         if (item.publish_end && item.publish_end < now) {
           acc.expired++;
         }
 
-        // Verificar se está agendada (data de início no futuro)
         if (item.publish_start > now) {
           acc.scheduled++;
         }
 
-        // Verificar se está sendo exibida na página inicial
-        // Notícia sendo exibida = ativa + dentro do período de publicação (já começou e não expirou)
         if (item.active && 
             item.publish_start <= now && 
             (!item.publish_end || item.publish_end > now)) {
@@ -207,21 +201,13 @@ const NewsList = () => {
           <NewsListHeader />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-primary/10 border-primary/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Exibindo Agora</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{newsStats.displaying}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Notícias Ativas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{newsStats.active}</div>
             </CardContent>
           </Card>
           <Card>
