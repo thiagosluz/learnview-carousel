@@ -3,6 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 
 interface CoordinationLink {
   id: string;
@@ -36,12 +37,20 @@ const CoordinationInfo = () => {
         <div className="flex-1 flex justify-around">
           {links?.map((link) => (
             <div key={link.id} className="flex flex-col items-center gap-2">
-              <QRCodeSVG
-                value={link.url}
-                size={64}
-                level="L"
-                className="bg-white p-1 rounded-lg"
-              />
+              <a 
+                href={link.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:opacity-80 transition-opacity"
+                title={`Acessar ${link.name}`}
+              >
+                <QRCodeSVG
+                  value={link.url}
+                  size={64}
+                  level="L"
+                  className="bg-white p-1 rounded-lg cursor-pointer"
+                />
+              </a>
               <span className="text-sm font-medium text-gray-600">{link.name}</span>
             </div>
           ))}
