@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -11,12 +10,14 @@ import NewsCarousel from '@/components/NewsCarousel';
 import CoordinationInfo from '@/components/CoordinationInfo';
 import { fetchTodayClasses, fetchActiveNews } from '@/services';
 import { Class, NewsItem } from '@/types';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const SHIFT_UPDATE_INTERVAL = 60000; // 1 minuto
 const DATA_REFRESH_INTERVAL = 300000; // 5 minutos
 
 const Index = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [currentShift, setCurrentShift] = useState<'morning' | 'afternoon' | 'night'>('morning');
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
@@ -131,11 +132,52 @@ const Index = () => {
     );
   }
 
+  if (isMobile) {
+    return (
+      <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-4">
+        <div className="max-w-[2100px] mx-auto">
+          <div className="flex flex-col gap-4">
+            <CoordinationInfo />
+            
+            <div className="w-full h-[50vh]">
+              {newsError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Erro</AlertTitle>
+                  <AlertDescription>
+                    Não foi possível carregar as notícias. Por favor, tente novamente mais tarde.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <NewsCarousel items={news || []} />
+              )}
+            </div>
+            
+            {classesError ? (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>
+                  Não foi possível carregar os horários. Por favor, tente novamente mais tarde.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <ClassSchedule 
+                classes={filteredClasses}
+                date={`${format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })} - ${getTurnoText()}`}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-4 md:p-8">
+    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
       <div className="max-w-[2100px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 h-auto lg:h-[calc(100vh-4rem)]">
-          <div className="w-full h-[50vh] lg:h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
+          <div className="lg:h-full">
             {newsError ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
