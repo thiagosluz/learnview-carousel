@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -131,10 +132,10 @@ const Index = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
+    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-4 md:p-8">
       <div className="max-w-[2100px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
-          <div className="lg:h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 h-auto lg:h-[calc(100vh-4rem)]">
+          <div className="w-full h-[50vh] lg:h-full">
             {newsError ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
