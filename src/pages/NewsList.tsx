@@ -1,6 +1,5 @@
-
 import { Trash2 } from 'lucide-react';
-import NavMenu from '@/components/NavMenu';
+import AdminLayout from '@/components/AdminLayout';
 import { NewsListHeader } from '@/components/news/NewsListHeader';
 import { NewsTable } from '@/components/news/NewsTable';
 import { NewsPagination } from '@/components/news/NewsPagination';
@@ -26,15 +25,16 @@ const NewsList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl text-gray-600">Carregando...</div>
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-2xl text-gray-600">Carregando...</div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div>
-      <NavMenu />
+    <AdminLayout>
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
@@ -69,7 +69,7 @@ const NewsList = () => {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

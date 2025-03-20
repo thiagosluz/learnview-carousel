@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import NavMenu from '@/components/NavMenu';
+import AdminLayout from '@/components/AdminLayout';
 import {
   Table,
   TableBody,
@@ -145,15 +144,16 @@ const ClassList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl text-gray-600">Carregando...</div>
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-2xl text-gray-600">Carregando...</div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div>
-      <NavMenu />
+    <AdminLayout>
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
@@ -219,23 +219,8 @@ const ClassList = () => {
                     />
                   </TableCell>
                   <TableCell>{DIAS_SEMANA[class_.day_of_week]}</TableCell>
-                  <TableCell>{class_.start_time} - {class_.end_time}</TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    {class_.professor.photo_url ? (
-                      <img 
-                        src={class_.professor.photo_url} 
-                        alt={class_.professor.name} 
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">
-                          {class_.professor.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                    )}
-                    {class_.professor.name}
-                  </TableCell>
+                  <TableCell>{`${class_.start_time} - ${class_.end_time}`}</TableCell>
+                  <TableCell>{class_.professor.name}</TableCell>
                   <TableCell>{class_.subject}</TableCell>
                   <TableCell>{class_.lab}</TableCell>
                   <TableCell>
@@ -278,33 +263,31 @@ const ClassList = () => {
               ))}
             </TableBody>
           </Table>
+
           {totalPages > 1 && (
-            <div className="py-4 border-t">
+            <div className="py-4">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious 
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+                      disabled={currentPage === 1}
                     />
                   </PaginationItem>
-                  
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
                         onClick={() => setCurrentPage(page)}
                         isActive={currentPage === page}
-                        className="cursor-pointer"
                       >
                         {page}
                       </PaginationLink>
                     </PaginationItem>
                   ))}
-                  
                   <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    <PaginationNext
+                      onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
+                      disabled={currentPage === totalPages}
                     />
                   </PaginationItem>
                 </PaginationContent>
@@ -313,7 +296,7 @@ const ClassList = () => {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

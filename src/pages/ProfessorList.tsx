@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import NavMenu from '@/components/NavMenu';
+import AdminLayout from '@/components/AdminLayout';
 import {
   Table,
   TableBody,
@@ -86,15 +85,16 @@ const ProfessorList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl text-gray-600">Carregando...</div>
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-2xl text-gray-600">Carregando...</div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div>
-      <NavMenu />
+    <AdminLayout>
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Professores</h1>
@@ -110,30 +110,33 @@ const ProfessorList = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Foto</TableHead>
                 <TableHead>Nome</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Telefone</TableHead>
                 <TableHead className="w-[100px]">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentProfessors.map((professor) => (
                 <TableRow key={professor.id}>
-                  <TableCell>
+                  <TableCell className="flex items-center gap-2">
                     {professor.photo_url ? (
                       <img 
                         src={professor.photo_url} 
                         alt={professor.name} 
-                        className="w-10 h-10 rounded-full object-cover"
+                        className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-500 text-sm">
                           {professor.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                     )}
+                    {professor.name}
                   </TableCell>
-                  <TableCell>{professor.name}</TableCell>
+                  <TableCell>{professor.email}</TableCell>
+                  <TableCell>{professor.phone}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Link to={`/professors/edit/${professor.id}`}>
@@ -174,33 +177,31 @@ const ProfessorList = () => {
               ))}
             </TableBody>
           </Table>
+
           {totalPages > 1 && (
-            <div className="py-4 border-t">
+            <div className="py-4">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious 
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+                      disabled={currentPage === 1}
                     />
                   </PaginationItem>
-                  
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
                         onClick={() => setCurrentPage(page)}
                         isActive={currentPage === page}
-                        className="cursor-pointer"
                       >
                         {page}
                       </PaginationLink>
                     </PaginationItem>
                   ))}
-                  
                   <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    <PaginationNext
+                      onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
+                      disabled={currentPage === totalPages}
                     />
                   </PaginationItem>
                 </PaginationContent>
@@ -209,7 +210,7 @@ const ProfessorList = () => {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
