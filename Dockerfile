@@ -1,15 +1,14 @@
-
 # Estágio de build
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 # Define o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos de package.json
+# Copia os arquivos de package.json e package-lock.json
 COPY package*.json ./
 
-# Instala as dependências
-RUN npm install
+# Instala as dependências com cache limpo e produção
+RUN npm ci --production=false
 
 # Copia o resto dos arquivos do projeto
 COPY . .
@@ -18,7 +17,10 @@ COPY . .
 RUN npm run build
 
 # Estágio de produção
-FROM nginx:alpine
+FROM nginx:stable-alpine
+
+# Copia a configuração personalizada do nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copia os arquivos buildados para o diretório do Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
