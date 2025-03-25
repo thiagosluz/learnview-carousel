@@ -2,15 +2,18 @@ import { useEffect, useState, useCallback } from 'react';
 import { Clock, MapPin } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Class } from '@/types';
+
 interface ClassScheduleProps {
   classes: Class[];
   date: string;
 }
+
 const ClassSchedule = ({
   classes,
   date
 }: ClassScheduleProps) => {
   const [currentClasses, setCurrentClasses] = useState<number[]>([]);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: false,
     containScroll: "trimSnaps",
@@ -27,9 +30,27 @@ const ClassSchedule = ({
     groups[groupIndex].push(item);
     return groups;
   }, []);
+
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
+
+  // Atualizar o índice do slide atual quando ele mudar
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const onSelect = () => {
+      setCurrentSlideIndex(emblaApi.selectedScrollSnap());
+    };
+    
+    emblaApi.on('select', onSelect);
+    onSelect(); // Chamada inicial para definir o valor correto
+    
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi]);
+
   useEffect(() => {
     const getCurrentClasses = () => {
       const now = new Date();
@@ -49,6 +70,7 @@ const ClassSchedule = ({
 
     return () => clearInterval(interval);
   }, [classes]);
+
   useEffect(() => {
     // Auto-scroll a cada 7 segundos se houver mais de um grupo
     if (classGroups.length > 1 && emblaApi) {
@@ -56,11 +78,13 @@ const ClassSchedule = ({
       return () => clearInterval(interval);
     }
   }, [emblaApi, classGroups.length, scrollNext]);
+
   if (classes.length === 0) {
     return <div className="w-full h-full p-8 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg flex items-center justify-center">
         <p className="text-xl text-gray-500">Nenhuma aula programada para hoje</p>
       </div>;
   }
+
   return <div className="w-full h-full p-2 lg:p-4 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in">
       <div className="mb-2 lg:mb-4">
         <h2 className="text-xl lg:text-2xl font-display font-bold text-gray-900">Horários de Hoje</h2>
@@ -104,8 +128,16 @@ const ClassSchedule = ({
       </div>
 
       {classGroups.length > 1 && <div className="flex justify-center gap-2 mt-2">
-          {classGroups.map((_, index) => <div key={index} className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${index === 0 ? 'bg-primary' : 'bg-primary/30'}`} />)}
+          {classGroups.map((_, index) => (
+            <div 
+              key={index} 
+              className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                index === currentSlideIndex ? 'bg-primary' : 'bg-primary/30'
+              }`} 
+            />
+          ))}
         </div>}
     </div>;
 };
+
 export default ClassSchedule;
