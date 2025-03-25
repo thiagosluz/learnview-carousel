@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
@@ -136,8 +135,8 @@ const ProfessorList = () => {
                     )}
                     {professor.name}
                   </TableCell>
-                  <TableCell>{professor.email || '-'}</TableCell>
-                  <TableCell>{professor.phone || '-'}</TableCell>
+                  <TableCell>{professor.email}</TableCell>
+                  <TableCell>{professor.phone}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Link to={`/professors/edit/${professor.id}`}>
@@ -184,14 +183,10 @@ const ProfessorList = () => {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
+                    <PaginationPrevious 
                       onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
                       disabled={currentPage === 1}
-                    >
-                      <PaginationPrevious />
-                    </Button>
+                    />
                   </PaginationItem>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
@@ -204,14 +199,10 @@ const ProfessorList = () => {
                     </PaginationItem>
                   ))}
                   <PaginationItem>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
+                    <PaginationNext
                       onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
                       disabled={currentPage === totalPages}
-                    >
-                      <PaginationNext />
-                    </Button>
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2, Plus } from 'lucide-react';
@@ -270,14 +269,10 @@ const ClassList = () => {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
+                    <PaginationPrevious 
                       onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
                       disabled={currentPage === 1}
-                    >
-                      <PaginationPrevious />
-                    </Button>
+                    />
                   </PaginationItem>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
@@ -290,14 +285,10 @@ const ClassList = () => {
                     </PaginationItem>
                   ))}
                   <PaginationItem>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
+                    <PaginationNext
                       onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
                       disabled={currentPage === totalPages}
-                    >
-                      <PaginationNext />
-                    </Button>
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
