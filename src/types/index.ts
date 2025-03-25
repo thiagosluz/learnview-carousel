@@ -3,6 +3,8 @@ export interface Professor {
   id: string;
   name: string;
   photo_url: string;
+  email?: string;
+  phone?: string;
 }
 
 export interface Class {
