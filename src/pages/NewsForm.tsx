@@ -29,6 +29,7 @@ const NewsForm = () => {
   const { toast } = useToast();
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [processedImage, setProcessedImage] = useState<File | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -77,6 +78,7 @@ const NewsForm = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
+      setProcessedImage(null); // Reset processed image when a new one is selected
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
@@ -86,10 +88,23 @@ const NewsForm = () => {
     }
   };
 
+  const handleProcessedImageChange = (file: File) => {
+    setProcessedImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+      form.setValue('content', file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const onSubmit = async (data: FormData) => {
     try {
       const publishStart = new Date(data.publish_start).toISOString();
       const publishEnd = data.publish_end ? new Date(data.publish_end).toISOString() : null;
+
+      // Use processed image if available, otherwise use selected image
+      const finalImage = processedImage || selectedImage;
 
       if (id) {
         await updateNews(id, {
@@ -98,7 +113,7 @@ const NewsForm = () => {
           content: data.content,
           duration: data.duration,
           active: data.active,
-          image: selectedImage ?? undefined,
+          image: finalImage ?? undefined,
           publish_start: publishStart,
           publish_end: publishEnd,
         });
@@ -113,7 +128,7 @@ const NewsForm = () => {
           content: data.content,
           duration: data.duration,
           active: data.active,
-          image: selectedImage ?? undefined,
+          image: finalImage ?? undefined,
           publish_start: publishStart,
           publish_end: publishEnd,
         });
@@ -170,6 +185,7 @@ const NewsForm = () => {
                         previewUrl={previewUrl}
                         onImageChange={handleImageChange}
                         fieldProps={field}
+                        onProcessedImageChange={handleProcessedImageChange}
                       />
                     ) : (
                       <Textarea 
