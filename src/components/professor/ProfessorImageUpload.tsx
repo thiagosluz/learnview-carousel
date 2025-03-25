@@ -2,31 +2,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-interface ImageUploadFieldProps {
+interface ProfessorImageUploadProps {
   previewUrl: string;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  fieldProps: any;
+  fieldProps?: any;
 }
 
-export const ImageUploadField = ({ 
+export const ProfessorImageUpload = ({ 
   previewUrl, 
   onImageChange, 
   fieldProps 
-}: ImageUploadFieldProps) => {
+}: ProfessorImageUploadProps) => {
   return (
     <div className="space-y-4">
       <div className="relative">
         <Input
-          id="image-upload"
+          id="professor-photo-upload"
           type="file"
           accept="image/*"
           onChange={onImageChange}
           className="hidden"
         />
         <Label
-          htmlFor="image-upload"
+          htmlFor="professor-photo-upload"
           className={cn(
-            "flex min-h-[400px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100",
+            "flex min-h-[300px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100",
             previewUrl && "border-primary"
           )}
         >
@@ -35,10 +35,10 @@ export const ImageUploadField = ({
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="max-h-[400px] max-w-full object-contain rounded"
+                className="max-h-[300px] max-w-full object-contain rounded"
               />
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded">
-                2160 × 2700
+                2700 × 2700
               </div>
             </div>
           ) : (
@@ -61,7 +61,7 @@ export const ImageUploadField = ({
                 <span className="font-semibold">Clique para fazer upload</span> ou arraste e solte
               </p>
               <p className="text-xs text-gray-500">
-                A imagem será processada na proporção 4:5 (2160 × 2700 pixels)
+                A foto será processada na proporção 1:1 (2700 × 2700 pixels)
               </p>
               <p className="text-xs text-gray-400 mt-1">
                 Será convertida para WebP para melhor desempenho em TV 4K
@@ -70,10 +70,12 @@ export const ImageUploadField = ({
           )}
         </Label>
       </div>
-      <Input 
-        {...fieldProps}
-        type="hidden"
-      />
+      {fieldProps && (
+        <Input 
+          {...fieldProps}
+          type="hidden"
+        />
+      )}
     </div>
   );
-};
+}; 

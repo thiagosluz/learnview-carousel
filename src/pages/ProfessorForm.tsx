@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -17,6 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createProfessor, updateProfessor, fetchProfessor } from '@/services';
+import { processProfessorImage } from '@/lib/imageProcessing';
+import { ProfessorImageUpload } from '@/components/professor/ProfessorImageUpload';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -24,40 +25,6 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
-
-const processImage = async (file: File): Promise<File> => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const size = Math.max(img.width, img.height);
-      canvas.width = size;
-      canvas.height = size;
-      
-      const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('Could not get canvas context');
-      
-      // Preenche o canvas com fundo branco
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, size, size);
-      
-      // Calcula as posições para centralizar a imagem
-      const x = (size - img.width) / 2;
-      const y = (size - img.height) / 2;
-      
-      // Desenha a imagem centralizada
-      ctx.drawImage(img, x, y, img.width, img.height);
-      
-      // Converte o canvas para blob
-      canvas.toBlob((blob) => {
-        if (!blob) throw new Error('Could not convert canvas to blob');
-        const processedFile = new File([blob], file.name, { type: 'image/png' });
-        resolve(processedFile);
-      }, 'image/png');
-    };
-    img.src = URL.createObjectURL(file);
-  });
-};
 
 const ProfessorForm = () => {
   const { id } = useParams();
@@ -99,16 +66,18 @@ const ProfessorForm = () => {
     const file = event.target.files?.[0];
     if (file) {
       try {
-        const processedFile = await processImage(file);
+        // Processar a foto do professor na proporção 1:1 (2700x2700) e converter para WebP
+        const processedFile = await processProfessorImage(file);
         form.setValue('photo', processedFile);
         
-        // Atualiza o preview
+        // Atualizar o preview
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreviewUrl(reader.result as string);
         };
         reader.readAsDataURL(processedFile);
       } catch (error) {
+        console.error('Erro ao processar imagem:', error);
         toast({
           variant: "destructive",
           title: "Erro ao processar imagem",
@@ -182,26 +151,22 @@ const ProfessorForm = () => {
               )}
             />
 
-            <FormItem>
-              <FormLabel>Foto</FormLabel>
-              <FormControl>
-                <div className="space-y-4">
-                  {previewUrl && (
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-32 h-32 rounded-lg object-contain bg-white"
+            <FormField
+              control={form.control}
+              name="photo"
+              render={({ field: { value, onChange, ...field } }) => (
+                <FormItem>
+                  <FormLabel>Foto</FormLabel>
+                  <FormControl>
+                    <ProfessorImageUpload
+                      previewUrl={previewUrl}
+                      onImageChange={handlePhotoChange}
                     />
-                  )}
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoChange}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

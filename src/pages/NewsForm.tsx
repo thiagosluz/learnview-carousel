@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -22,6 +21,7 @@ import { NewsFormHeader } from '@/components/news/NewsFormHeader';
 import { ImageUploadField } from '@/components/news/ImageUploadField';
 import { NewsTypeField } from '@/components/news/NewsTypeField';
 import { formSchema, FormData } from '@/components/news/NewsFormTypes';
+import { processImage } from '@/lib/imageProcessing';
 
 const NewsForm = () => {
   const { id } = useParams();
@@ -73,16 +73,28 @@ const NewsForm = () => {
     }
   }, [id, form, navigate, toast]);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-        form.setValue('content', file.name);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const processedFile = await processImage(file);
+        
+        setSelectedImage(processedFile);
+        
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewUrl(reader.result as string);
+          form.setValue('content', file.name);
+        };
+        reader.readAsDataURL(processedFile);
+      } catch (error) {
+        console.error('Erro ao processar imagem:', error);
+        toast({
+          variant: "destructive",
+          title: "Erro ao processar imagem",
+          description: "Não foi possível processar a imagem selecionada.",
+        });
+      }
     }
   };
 
