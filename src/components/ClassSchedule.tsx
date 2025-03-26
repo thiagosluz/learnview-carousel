@@ -1,5 +1,6 @@
+
 import { useEffect, useState, useCallback } from 'react';
-import { Clock, MapPin } from 'lucide-react';
+import { Clock, MapPin, BookOpen } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Class } from '@/types';
 
@@ -106,8 +107,8 @@ const ClassSchedule = ({
                           </div>
                           <div className="flex-grow min-w-0">
                             <div className="flex items-center gap-1.5 text-xs lg:text-sm font-semibold">
-                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                              <span>{classItem.lab}</span>
+                              <BookOpen className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{classItem.course}</span>
                             </div>
                             <h3 className="text-sm lg:text-base font-bold mt-0.5 break-words">{classItem.subject}</h3>
                             <div className="flex items-center justify-between mt-0.5">
@@ -116,6 +117,10 @@ const ClassSchedule = ({
                                 <Clock className="w-3.5 h-3.5 flex-shrink-0" />
                                 <span className="text-xs lg:text-sm font-medium">{classItem.start_time} - {classItem.end_time}</span>
                               </div>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-xs lg:text-sm mt-1">
+                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{classItem.lab}</span>
                             </div>
                           </div>
                         </div>

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -12,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { createClass, updateClass, fetchClass, fetchProfessors } from '@/services';
 import { Professor } from '@/types';
 
@@ -38,6 +40,11 @@ const LABORATORIOS = [
   'MSI 02'
 ];
 
+const COURSES = [
+  { value: 'TADS', label: 'TADS - Tecnologia em Análise e Desenvolvimento de Sistemas' },
+  { value: 'MSI', label: 'MSI - Manutenção e Suporte em Informática' }
+];
+
 const ClassForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -50,6 +57,7 @@ const ClassForm = () => {
   const [professorId, setProfessorId] = useState('');
   const [lab, setLab] = useState(LABORATORIOS[0]);
   const [dayOfWeek, setDayOfWeek] = useState<string>('');
+  const [course, setCourse] = useState('TADS');
 
   const { data: professors = [] } = useQuery<Professor[]>({
     queryKey: ['professors'],
@@ -65,6 +73,7 @@ const ClassForm = () => {
         setProfessorId(class_.professor.id);
         setLab(class_.lab);
         setDayOfWeek(class_.day_of_week.toString());
+        setCourse(class_.course || 'TADS'); // Default to TADS if not set
       }).catch((error) => {
         toast({
           variant: "destructive",
@@ -88,6 +97,7 @@ const ClassForm = () => {
           professor_id: professorId,
           lab,
           day_of_week: parseInt(dayOfWeek),
+          course,
         });
         toast({
           title: "Aula atualizada",
@@ -101,6 +111,7 @@ const ClassForm = () => {
           professor_id: professorId,
           lab,
           day_of_week: parseInt(dayOfWeek),
+          course,
         });
         toast({
           title: "Aula cadastrada",
@@ -174,6 +185,24 @@ const ClassForm = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Curso</Label>
+            <RadioGroup 
+              value={course} 
+              onValueChange={setCourse}
+              className="flex flex-col space-y-2 mt-1"
+            >
+              {COURSES.map((courseOption) => (
+                <div key={courseOption.value} className="flex items-center space-x-2">
+                  <RadioGroupItem value={courseOption.value} id={`course-${courseOption.value}`} />
+                  <Label htmlFor={`course-${courseOption.value}`} className="font-normal cursor-pointer">
+                    {courseOption.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
           </div>
 
           <div className="space-y-2">

@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       classes: {
         Row: {
+          course: string
           created_at: string | null
           day_of_week: number
           end_time: string
@@ -21,6 +22,7 @@ export type Database = {
           subject: string
         }
         Insert: {
+          course?: string
           created_at?: string | null
           day_of_week: number
           end_time: string
@@ -31,6 +33,7 @@ export type Database = {
           subject: string
         }
         Update: {
+          course?: string
           created_at?: string | null
           day_of_week?: number
           end_time?: string

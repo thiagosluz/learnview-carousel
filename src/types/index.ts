@@ -13,6 +13,7 @@ export interface Class {
   subject: string;
   lab: string;
   day_of_week: number;
+  course: string;
 }
 
 export interface NewsItem {
