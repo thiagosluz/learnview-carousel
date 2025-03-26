@@ -89,7 +89,6 @@ const ClassList = () => {
   const [selectedClasses, setSelectedClasses] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Estados para os filtros
   const [dayFilter, setDayFilter] = useState<string>('all');
   const [timeFilter, setTimeFilter] = useState<string>('');
   const [professorFilter, setProfessorFilter] = useState<string>('');
@@ -111,7 +110,6 @@ const ClassList = () => {
     }
   });
 
-  // Função para filtrar as aulas
   const filteredClasses = classes.filter(class_ => {
     const matchesDay = dayFilter === 'all' || DIAS_SEMANA[class_.day_of_week].toLowerCase().includes(dayFilter.toLowerCase());
     const matchesTime = !timeFilter || 
@@ -131,7 +129,6 @@ const ClassList = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentClasses = filteredClasses.slice(startIndex, endIndex);
 
-  // Reset para a primeira página quando os filtros mudam
   const handleFilterChange = (value: string | string[], setFilter: (value: any) => void) => {
     setFilter(value);
     setCurrentPage(1);
@@ -161,10 +158,8 @@ const ClassList = () => {
     const allSelected = currentClasses.every(c => selectedClasses.has(c.id));
     
     if (allSelected) {
-      // Remove todas as seleções da página atual
       currentClasses.forEach(c => newSelected.delete(c.id));
     } else {
-      // Adiciona todas as aulas da página atual
       currentClasses.forEach(c => newSelected.add(c.id));
     }
     
@@ -263,7 +258,6 @@ const ClassList = () => {
           </Link>
         </div>
 
-        {/* Filtros */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <div className="relative">
             <Select
@@ -355,7 +349,6 @@ const ClassList = () => {
           </div>
         </div>
 
-        {/* Botão para limpar filtros */}
         {(dayFilter !== 'all' || timeFilter || professorFilter || subjectFilter || labFilter.length > 0) && (
           <div className="flex justify-end mb-4">
             <Button
@@ -449,7 +442,7 @@ const ClassList = () => {
                   <PaginationItem>
                     <PaginationPrevious 
                       onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
-                      disabled={currentPage === 1}
+                      isDisabled={currentPage === 1}
                     />
                   </PaginationItem>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -465,7 +458,7 @@ const ClassList = () => {
                   <PaginationItem>
                     <PaginationNext
                       onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
-                      disabled={currentPage === totalPages}
+                      isDisabled={currentPage === totalPages}
                     />
                   </PaginationItem>
                 </PaginationContent>

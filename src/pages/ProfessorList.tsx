@@ -59,7 +59,6 @@ const ProfessorList = () => {
     }
   });
 
-  // Filtrar professores com base no termo de pesquisa
   const filteredProfessors = professors.filter(professor =>
     professor.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -90,7 +89,6 @@ const ProfessorList = () => {
     }
   };
 
-  // Reset para a primeira página quando o termo de pesquisa muda
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
@@ -206,7 +204,7 @@ const ProfessorList = () => {
                   <PaginationItem>
                     <PaginationPrevious 
                       onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
-                      disabled={currentPage === 1}
+                      isDisabled={currentPage === 1}
                     />
                   </PaginationItem>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -222,7 +220,7 @@ const ProfessorList = () => {
                   <PaginationItem>
                     <PaginationNext
                       onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
-                      disabled={currentPage === totalPages}
+                      isDisabled={currentPage === totalPages}
                     />
                   </PaginationItem>
                 </PaginationContent>

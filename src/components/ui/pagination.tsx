@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
@@ -36,27 +37,44 @@ PaginationItem.displayName = "PaginationItem"
 
 type PaginationLinkProps = {
   isActive?: boolean
+  isDisabled?: boolean
 } & Pick<ButtonProps, "size"> &
   React.ComponentProps<"a">
 
 const PaginationLink = ({
   className,
   isActive,
+  isDisabled,
   size = "icon",
   ...props
-}: PaginationLinkProps) => (
-  <a
-    aria-current={isActive ? "page" : undefined}
-    className={cn(
-      buttonVariants({
-        variant: isActive ? "outline" : "ghost",
-        size,
-      }),
-      className
-    )}
-    {...props}
-  />
-)
+}: PaginationLinkProps) => {
+  // If disabled, prevent click and add disabled styling
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isDisabled) {
+      e.preventDefault()
+    }
+    if (props.onClick && !isDisabled) {
+      props.onClick(e)
+    }
+  }
+
+  return (
+    <a
+      aria-current={isActive ? "page" : undefined}
+      aria-disabled={isDisabled ? "true" : undefined}
+      className={cn(
+        buttonVariants({
+          variant: isActive ? "outline" : "ghost",
+          size,
+        }),
+        isDisabled && "pointer-events-none opacity-50",
+        className
+      )}
+      onClick={handleClick}
+      {...props}
+    />
+  )
+}
 PaginationLink.displayName = "PaginationLink"
 
 const PaginationPrevious = ({
