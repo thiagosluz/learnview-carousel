@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { Pencil, Trash2, Plus, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import AdminLayout from '@/components/AdminLayout';
 import {
   Table,
@@ -41,6 +42,7 @@ const ProfessorList = () => {
   const { toast } = useToast();
   const [professorToDelete, setProfessorToDelete] = useState<Professor | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { data: professors = [], isLoading, refetch } = useQuery<Professor[]>({
     queryKey: ['professors'],
@@ -57,10 +59,15 @@ const ProfessorList = () => {
     }
   });
 
-  const totalPages = Math.ceil(professors.length / ITEMS_PER_PAGE);
+  // Filtrar professores com base no termo de pesquisa
+  const filteredProfessors = professors.filter(professor =>
+    professor.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredProfessors.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentProfessors = professors.slice(startIndex, endIndex);
+  const currentProfessors = filteredProfessors.slice(startIndex, endIndex);
 
   const handleDelete = async () => {
     if (!professorToDelete) return;
@@ -81,6 +88,12 @@ const ProfessorList = () => {
     } finally {
       setProfessorToDelete(null);
     }
+  };
+
+  // Reset para a primeira página quando o termo de pesquisa muda
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
   };
 
   if (isLoading) {
@@ -106,13 +119,23 @@ const ProfessorList = () => {
           </Link>
         </div>
 
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Pesquisar professor por nome..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+        </div>
+
         <div className="bg-white rounded-lg shadow">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
                 <TableHead className="w-[100px]">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -135,8 +158,6 @@ const ProfessorList = () => {
                     )}
                     {professor.name}
                   </TableCell>
-                  <TableCell>{professor.email}</TableCell>
-                  <TableCell>{professor.phone}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Link to={`/professors/edit/${professor.id}`}>

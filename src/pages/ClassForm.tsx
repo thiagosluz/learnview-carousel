@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -26,6 +25,19 @@ const DIAS_SEMANA = [
   { value: 6, label: 'Sábado' }
 ];
 
+const LABORATORIOS = [
+  'Laboratório 01',
+  'Laboratório 02',
+  'Laboratório 03',
+  'Laboratório 04',
+  'TADS 01',
+  'TADS 02',
+  'TADS 03',
+  'REDES',
+  'MSI 01',
+  'MSI 02'
+];
+
 const ClassForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -36,7 +48,7 @@ const ClassForm = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [professorId, setProfessorId] = useState('');
-  const [lab, setLab] = useState('');
+  const [lab, setLab] = useState(LABORATORIOS[0]);
   const [dayOfWeek, setDayOfWeek] = useState<string>('');
 
   const { data: professors = [] } = useQuery<Professor[]>({
@@ -182,13 +194,18 @@ const ClassForm = () => {
 
           <div className="space-y-2">
             <Label htmlFor="lab">Laboratório</Label>
-            <Input
-              id="lab"
-              value={lab}
-              onChange={(e) => setLab(e.target.value)}
-              placeholder="Número ou nome do laboratório"
-              required
-            />
+            <Select value={lab} onValueChange={setLab}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o laboratório" />
+              </SelectTrigger>
+              <SelectContent>
+                {LABORATORIOS.map((laboratorio) => (
+                  <SelectItem key={laboratorio} value={laboratorio}>
+                    {laboratorio}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex gap-4">
