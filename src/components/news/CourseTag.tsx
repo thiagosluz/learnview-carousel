@@ -12,7 +12,6 @@ export const CourseTag = ({ course, className }: CourseTagProps) => {
   const tagColorMap: Record<string, string> = {
     'TADS': 'bg-primary/90',
     'MSI': 'bg-[#33C3F0]/90',
-    'ESINF': 'bg-[#8B5CF6]/90',
     'Esp. em Informática na Educação': 'bg-[#F97316]/90',
   };
   

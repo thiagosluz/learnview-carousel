@@ -78,6 +78,7 @@ export type Database = {
         Row: {
           active: boolean | null
           content: string
+          course: string | null
           created_at: string | null
           duration: number
           id: string
@@ -89,6 +90,7 @@ export type Database = {
         Insert: {
           active?: boolean | null
           content: string
+          course?: string | null
           created_at?: string | null
           duration?: number
           id?: string
@@ -100,6 +102,7 @@ export type Database = {
         Update: {
           active?: boolean | null
           content?: string
+          course?: string | null
           created_at?: string | null
           duration?: number
           id?: string
