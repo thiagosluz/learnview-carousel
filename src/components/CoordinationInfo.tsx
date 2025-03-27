@@ -27,7 +27,7 @@ const CoordinationInfo = () => {
   return (
     <div className="w-full bg-white rounded-2xl shadow-lg p-4 mb-4">
       <div className="flex items-center gap-6">
-        <Link to="/professors">
+        <Link to="/horarios">
           <img
             src="https://tquredrvexziwipkonhn.supabase.co/storage/v1/object/public/images/nova_logo.png"
             alt="Logo Coordenação"

@@ -31,18 +31,18 @@ const LABORATORIOS = [
   'Laboratório 02',
   'Laboratório 03',
   'Laboratório 04',
-  'TADS 01',
-  'TADS 02',
-  'TADS 03',
-  'REDES',
-  'MSI 01',
-  'MSI 02'
+  'Laboratório TADS 01',
+  'Laboratório TADS 02',
+  'Laboratório TADS 03',
+  'Laboratório REDES',
+  'Laboratório MSI 01',
+  'Laboratório MSI 02'
 ];
 
 const COURSES = [
   { value: 'TADS', label: 'TADS - Tecnologia em Análise e Desenvolvimento de Sistemas' },
   { value: 'MSI', label: 'MSI - Manutenção e Suporte em Informática' },
-  { value: 'Esp. em Informática na Educação', label: 'Especialização em Informática na Educação' }
+  { value: 'Esp. IE', label: 'Especialização em Informática na Educação' }
 ];
 
 const ClassForm = () => {

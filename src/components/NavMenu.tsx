@@ -1,38 +1,29 @@
-
-import { School, Users, Newspaper, Home, LogOut, QrCode } from 'lucide-react';
+import { School, Users, Newspaper, Home, LogOut, QrCode, Calendar } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const NavMenu = () => {
   const location = useLocation();
-  const { toast } = useToast();
+  const { isAuthenticated, signOut } = useAuth();
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
-  const links = [
+  const publicLinks = [
     { path: '/', icon: Home, label: 'Início' },
+    { path: '/horarios', icon: Calendar, label: 'Horários' },
+  ];
+
+  const privateLinks = [
     { path: '/professors', icon: Users, label: 'Professores' },
     { path: '/classes', icon: School, label: 'Aulas' },
     { path: '/news', icon: Newspaper, label: 'Notícias' },
     { path: '/links', icon: QrCode, label: 'Links QR' },
   ];
 
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erro ao sair",
-        description: error instanceof Error ? error.message : "Ocorreu um erro ao tentar sair",
-      });
-    }
-  };
+  const links = isAuthenticated ? [...publicLinks, ...privateLinks] : publicLinks;
 
   return (
     <div className="bg-white shadow-md mb-6">
@@ -54,14 +45,16 @@ const NavMenu = () => {
               </Link>
             ))}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleLogout}
-            className="text-gray-600 hover:text-primary"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={signOut}
+              className="text-gray-600 hover:text-primary"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </nav>
     </div>

@@ -1,10 +1,9 @@
-
 // Define course color mapping
-export const courseColors = {
+const courseColors = {
   'TADS': 'bg-primary text-white',
   'MSI': 'bg-[#33C3F0] text-white',
-  'Esp. em Informática na Educação': 'bg-[#F97316] text-white',
-};
+  'Esp. IE': 'bg-[#F97316] text-white',
+} as const;
 
 export const getClassHighlightColor = (course: string) => {
   return courseColors[course as keyof typeof courseColors] || courseColors['TADS'];
@@ -14,6 +13,6 @@ export const getClassHighlightColor = (course: string) => {
 export const courseOptions = [
   { value: 'TADS', label: 'TADS' },
   { value: 'MSI', label: 'MSI' },
-  { value: 'Esp. em Informática na Educação', label: 'Esp. em Informática na Educação' },
+  { value: 'Esp. IE', label: 'Especialização em Informática na Educação' },
   { value: 'all', label: 'Todos os cursos' }
 ];

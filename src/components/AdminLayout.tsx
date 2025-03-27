@@ -1,9 +1,9 @@
-import React from 'react';
-import NavMenu from './NavMenu';
+import { ReactNode } from "react";
+import NavMenu from "./NavMenu";
 import Footer from './Footer';
 
 interface AdminLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import NewsForm from "./pages/NewsForm";
 import LinkList from "./pages/LinkList";
 import LinkForm from "./pages/LinkForm";
 import NotFound from "./pages/NotFound";
+import ScheduleTable from "./pages/ScheduleTable";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +28,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/horarios" element={<ScheduleTable />} />
+          
+          {/* Rotas Protegidas */}
           <Route path="/professors" element={
             <ProtectedRoute>
               <ProfessorList />
@@ -43,6 +46,7 @@ const App = () => (
               <ProfessorForm />
             </ProtectedRoute>
           } />
+          
           <Route path="/classes" element={
             <ProtectedRoute>
               <ClassList />
@@ -58,6 +62,7 @@ const App = () => (
               <ClassForm />
             </ProtectedRoute>
           } />
+          
           <Route path="/news" element={
             <ProtectedRoute>
               <NewsList />
@@ -73,6 +78,7 @@ const App = () => (
               <NewsForm />
             </ProtectedRoute>
           } />
+          
           <Route path="/links" element={
             <ProtectedRoute>
               <LinkList />
@@ -88,6 +94,7 @@ const App = () => (
               <LinkForm />
             </ProtectedRoute>
           } />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
