@@ -9,6 +9,13 @@ interface ClassScheduleProps {
   date: string;
 }
 
+// Define course color mapping
+const courseColors = {
+  'TADS': 'bg-primary text-white',
+  'MSI': 'bg-[#33C3F0] text-white',
+  'ESINF': 'bg-[#8B5CF6] text-white',
+};
+
 const ClassSchedule = ({
   classes,
   date
@@ -86,6 +93,11 @@ const ClassSchedule = ({
       </div>;
   }
 
+  // Get class highlight color based on course
+  const getClassHighlightColor = (course: string) => {
+    return courseColors[course as keyof typeof courseColors] || courseColors['TADS'];
+  };
+
   return <div className="w-full h-full p-2 lg:p-4 bg-gradient-to-br from-primary/5 to-secondary rounded-2xl shadow-lg animate-fade-in">
       <div className="mb-2 lg:mb-4">
         <h2 className="text-xl lg:text-2xl font-display font-bold text-gray-900">Horários de Hoje</h2>
@@ -99,8 +111,10 @@ const ClassSchedule = ({
                 {group.map((classItem, index) => {
               const originalIndex = groupIndex * 3 + index;
               const isActive = currentClasses.includes(originalIndex);
+              const highlightColor = getClassHighlightColor(classItem.course);
+              
               return <div key={classItem.id} className={`${isActive ? 'p-0.5' : ''}`}>
-                      <div className={`p-2 lg:p-3 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary text-white scale-[1.02] shadow-lg' : 'bg-white hover:bg-secondary/20'}`}>
+                      <div className={`p-2 lg:p-3 rounded-xl transition-all duration-300 ${isActive ? `${highlightColor} scale-[1.02] shadow-lg` : 'bg-white hover:bg-secondary/20'}`}>
                         <div className="flex items-center gap-3 lg:gap-4 mx-0">
                           <div className="flex-shrink-0">
                             <img src={classItem.professor.photo_url} alt={classItem.professor.name} className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-2 shadow-md ${isActive ? 'border-white' : 'border-primary/20'}`} />

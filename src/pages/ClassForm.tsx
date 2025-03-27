@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -42,7 +41,8 @@ const LABORATORIOS = [
 
 const COURSES = [
   { value: 'TADS', label: 'TADS - Tecnologia em Análise e Desenvolvimento de Sistemas' },
-  { value: 'MSI', label: 'MSI - Manutenção e Suporte em Informática' }
+  { value: 'MSI', label: 'MSI - Manutenção e Suporte em Informática' },
+  { value: 'ESINF', label: 'ESINF - Especialização em Informática na Educação' }
 ];
 
 const ClassForm = () => {
