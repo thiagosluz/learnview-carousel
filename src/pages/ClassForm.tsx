@@ -42,7 +42,7 @@ const LABORATORIOS = [
 const COURSES = [
   { value: 'TADS', label: 'TADS - Tecnologia em Análise e Desenvolvimento de Sistemas' },
   { value: 'MSI', label: 'MSI - Manutenção e Suporte em Informática' },
-  { value: 'ESINF', label: 'ESINF - Especialização em Informática na Educação' }
+  { value: 'Esp. em Informática na Educação', label: 'Especialização em Informática na Educação' }
 ];
 
 const ClassForm = () => {
