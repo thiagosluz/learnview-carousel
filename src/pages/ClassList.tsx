@@ -149,7 +149,7 @@ const ClassList = () => {
     );
   }
 
-  const hasActiveFilters = dayFilter !== 'all' || timeFilter || professorFilter || subjectFilter || labFilter.length > 0;
+  const hasActiveFilters = dayFilter !== 'all' || !!timeFilter || !!professorFilter || !!subjectFilter || labFilter.length > 0;
 
   return (
     <AdminLayout>
