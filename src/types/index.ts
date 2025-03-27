@@ -25,4 +25,5 @@ export interface NewsItem {
   active?: boolean;
   publish_start: string;
   publish_end: string | null;
+  course?: string | null;
 }

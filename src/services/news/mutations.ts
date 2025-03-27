@@ -11,6 +11,7 @@ export async function createNews({
   image,
   publish_start,
   publish_end,
+  course,
 }: {
   title: string;
   type: 'text' | 'image';
@@ -20,6 +21,7 @@ export async function createNews({
   image?: File;
   publish_start: string;
   publish_end?: string | null;
+  course?: string | null;
 }): Promise<void> {
   try {
     let finalContent = content;
@@ -38,6 +40,7 @@ export async function createNews({
         active,
         publish_start,
         publish_end,
+        course: course === 'all' ? null : course,
       }]);
 
     if (error) throw error;
@@ -58,6 +61,7 @@ export async function updateNews(
     image,
     publish_start,
     publish_end,
+    course,
   }: {
     title: string;
     type: 'text' | 'image';
@@ -67,6 +71,7 @@ export async function updateNews(
     image?: File;
     publish_start: string;
     publish_end?: string | null;
+    course?: string | null;
   }
 ): Promise<void> {
   try {
@@ -86,6 +91,7 @@ export async function updateNews(
         active,
         publish_start,
         publish_end,
+        course: course === 'all' ? null : course,
       })
       .eq('id', id);
 

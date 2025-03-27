@@ -20,6 +20,7 @@ import { createNews, updateNews, fetchNews } from '@/services';
 import { NewsFormHeader } from '@/components/news/NewsFormHeader';
 import { ImageUploadField } from '@/components/news/ImageUploadField';
 import { NewsTypeField } from '@/components/news/NewsTypeField';
+import { CourseSelectField } from '@/components/news/CourseSelectField';
 import { formSchema, FormData } from '@/components/news/NewsFormTypes';
 import { processImage } from '@/lib/imageProcessing';
 
@@ -40,6 +41,7 @@ const NewsForm = () => {
       active: true,
       publish_start: new Date().toISOString().split('T')[0],
       publish_end: null,
+      course: 'all',
     },
   });
 
@@ -56,6 +58,7 @@ const NewsForm = () => {
             active: news.active ?? true,
             publish_start: news.publish_start.split('T')[0],
             publish_end: news.publish_end ? news.publish_end.split('T')[0] : null,
+            course: news.course || 'all',
           });
           if (news.type === 'image') {
             setPreviewUrl(news.content);
@@ -113,6 +116,7 @@ const NewsForm = () => {
           image: selectedImage ?? undefined,
           publish_start: publishStart,
           publish_end: publishEnd,
+          course: data.course,
         });
         toast({
           title: "Notícia atualizada",
@@ -128,6 +132,7 @@ const NewsForm = () => {
           image: selectedImage ?? undefined,
           publish_start: publishStart,
           publish_end: publishEnd,
+          course: data.course,
         });
         toast({
           title: "Notícia cadastrada",
@@ -169,6 +174,8 @@ const NewsForm = () => {
             />
 
             <NewsTypeField form={form} />
+
+            <CourseSelectField form={form} />
 
             <FormField
               control={form.control}

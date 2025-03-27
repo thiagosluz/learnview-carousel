@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { NewsItem } from '@/types';
+import { CourseTag } from './news/CourseTag';
 
 interface NewsCarouselProps {
   items: NewsItem[];
@@ -71,7 +72,8 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
     switch (item.type) {
       case 'text':
         return (
-          <div className="flex flex-col items-center justify-center h-full p-6 md:p-12 text-center bg-gradient-to-br from-primary/5 to-accent/20">
+          <div className="flex flex-col items-center justify-center h-full p-6 md:p-12 text-center bg-gradient-to-br from-primary/5 to-accent/20 relative">
+            <CourseTag course={item.course} />
             <h2 className="text-2xl md:text-4xl font-display font-bold mb-4 md:mb-6 text-gray-900">{item.title}</h2>
             <p className="text-lg md:text-2xl leading-relaxed text-gray-700">{item.content}</p>
           </div>
@@ -79,6 +81,7 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
       case 'image':
         return (
           <div className="relative h-full">
+            <CourseTag course={item.course} />
             <img
               src={item.content}
               alt={item.title}
