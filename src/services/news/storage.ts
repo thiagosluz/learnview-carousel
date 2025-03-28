@@ -31,20 +31,20 @@ export async function deleteNewsImage(imageUrl: string): Promise<void> {
     const fileName = pathParts[pathParts.length - 1];
     
     if (fileName) {
-      console.log('Attempting to delete file:', fileName);
+      // console.log('Attempting to delete file:', fileName);
       
       const { data: files } = await supabase.storage
         .from('news-images')
         .list();
       
-      console.log('Files in bucket:', files);
+      // console.log('Files in bucket:', files);
       
       const { error: storageError } = await supabase.storage
         .from('news-images')
         .remove([fileName]);
 
       if (storageError) {
-        console.error('Storage error:', storageError);
+        // console.error('Storage error:', storageError);
         throw storageError;
       }
 
@@ -52,17 +52,17 @@ export async function deleteNewsImage(imageUrl: string): Promise<void> {
         .from('news-images')
         .list();
         
-      console.log('Remaining files after deletion:', remainingFiles);
+      // console.log('Remaining files after deletion:', remainingFiles);
       
       const fileStillExists = remainingFiles?.some(file => file.name === fileName);
-      if (fileStillExists) {
-        console.log('File still exists after deletion attempt');
-      } else {
-        console.log('File successfully deleted');
-      }
+      // if (fileStillExists) {
+      //   // console.log('File still exists after deletion attempt');
+      // } else {
+      //   // console.log('File successfully deleted');
+      // }
     }
   } catch (error) {
-    console.error('Error in storage operation:', error);
+    // console.error('Error in storage operation:', error);
     throw error;
   }
 }

@@ -50,7 +50,7 @@ const NewsList = () => {
         
         <NewsStats stats={newsStats} />
         
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow-sm">
           <NewsTable 
             news={currentNews}
             onDelete={handleDelete}

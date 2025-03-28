@@ -10,7 +10,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col">
       <NavMenu />
-      <div className="flex-grow">
+      <div className="grow">
         {children}
       </div>
       <Footer />

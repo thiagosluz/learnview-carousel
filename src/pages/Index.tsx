@@ -60,7 +60,7 @@ const Index = () => {
 
   if (isLoadingClasses || isLoadingNews) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-secondary via-white to-accent p-8 flex items-center justify-center">
         <div className="text-2xl text-gray-600">Carregando...</div>
       </div>
     );

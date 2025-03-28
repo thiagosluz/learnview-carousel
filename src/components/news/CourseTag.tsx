@@ -19,7 +19,7 @@ export const CourseTag = ({ course, className }: CourseTagProps) => {
   return (
     <div 
       className={cn(
-        "absolute top-2 right-2 z-10 px-2 py-1 rounded-md text-xs font-medium text-white shadow-sm",
+        "absolute top-2 right-2 z-10 px-2 py-1 rounded-md text-xs font-medium text-white shadow-xs",
         tagColor,
         className
       )}

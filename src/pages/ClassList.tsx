@@ -176,7 +176,7 @@ const ClassList = () => {
           hasActiveFilters={hasActiveFilters}
         />
 
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow-sm">
           <ClassTable 
             classes={currentClasses}
             selectedClasses={selectedClasses}

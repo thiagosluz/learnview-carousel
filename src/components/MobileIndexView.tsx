@@ -23,7 +23,7 @@ const MobileIndexView = ({
   shiftText
 }: MobileIndexViewProps) => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-4">
+    <div className="relative min-h-screen bg-linear-to-br from-secondary via-white to-accent p-4">
       <div className="max-w-[2100px] mx-auto">
         <div className="flex flex-col gap-4">
           <CoordinationInfo />

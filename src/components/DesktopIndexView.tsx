@@ -23,7 +23,7 @@ const DesktopIndexView = ({
   shiftText
 }: DesktopIndexViewProps) => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-secondary via-white to-accent p-8">
+    <div className="relative min-h-screen bg-linear-to-br from-secondary via-white to-accent p-8">
       <div className="max-w-[2100px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-4rem)]">
           <div className="lg:h-full">

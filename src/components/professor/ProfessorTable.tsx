@@ -39,7 +39,7 @@ export const ProfessorTable = ({
   onCancelDelete
 }: ProfessorTableProps) => {
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="bg-white rounded-lg shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>

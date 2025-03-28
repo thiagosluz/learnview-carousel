@@ -35,9 +35,9 @@ export const ImageUploadField = ({
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="max-h-[400px] max-w-full object-contain rounded"
+                className="max-h-[400px] max-w-full object-contain rounded-sm"
               />
-              <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded">
+              <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-sm">
                 2160 × 2700
               </div>
             </div>
