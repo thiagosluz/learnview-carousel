@@ -128,7 +128,7 @@ const ScheduleTable = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="space-y-8 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             {groupedClasses.map((periodo) => (
               <div key={periodo.id} className="bg-white rounded-lg shadow-sm border">
                 <div className="px-6 py-4 border-b bg-gray-50">
