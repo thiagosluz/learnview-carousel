@@ -1,4 +1,3 @@
-
 import { Filter } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,8 @@ export const LABORATORIOS = [
   'Laboratório TADS 03',
   'Laboratório REDES',
   'Laboratório MSI 01',
-  'Laboratório MSI 02'
+  'Laboratório MSI 02',
+  'EAD'
 ];
 
 interface ClassListFiltersProps {

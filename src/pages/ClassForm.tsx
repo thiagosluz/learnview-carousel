@@ -36,7 +36,8 @@ const LABORATORIOS = [
   'Laboratório TADS 03',
   'Laboratório REDES',
   'Laboratório MSI 01',
-  'Laboratório MSI 02'
+  'Laboratório MSI 02',
+  'EAD'
 ];
 
 const COURSES = [
