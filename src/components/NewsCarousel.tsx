@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { NewsItem } from '@/types';
@@ -85,7 +84,7 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
             <img
               src={item.content}
               alt={item.title}
-              className="w-full h-full object-contain md:object-cover"
+              className="w-full h-full object-contain md:object-contain"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-linear-to-t from-black/60 to-transparent">
               <h2 className="text-xl md:text-2xl font-bold text-white">{item.title}</h2>
