@@ -17,7 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import AdminLayout from '@/components/AdminLayout';
-import { supabase } from '@/integrations/supabase/client';
+import { createUser } from '@/services/users';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const formSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -27,9 +28,9 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const UserForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -39,32 +40,27 @@ const UserForm = () => {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    try {
-      const { error } = await supabase.auth.admin.createUser({
-        email: data.email,
-        password: data.password,
-        email_confirm: true,
-      });
-      
-      if (error) throw error;
-      
+  const createUserMutation = useMutation({
+    mutationFn: (data: FormData) => createUser(data.email, data.password),
+    onSuccess: () => {
       toast({
         title: "Usuário criado com sucesso",
-        description: `O usuário ${data.email} foi criado com sucesso.`,
+        description: `O usuário ${form.getValues().email} foi criado com sucesso.`,
       });
-      
+      queryClient.invalidateQueries({ queryKey: ['users'] });
       navigate('/users');
-    } catch (error) {
+    },
+    onError: (error) => {
       toast({
         variant: "destructive",
         title: "Erro ao criar usuário",
         description: error instanceof Error ? error.message : "Ocorreu um erro ao criar o usuário",
       });
-    } finally {
-      setIsLoading(false);
     }
+  });
+
+  const onSubmit = (data: FormData) => {
+    createUserMutation.mutate(data);
   };
 
   return (
@@ -111,8 +107,8 @@ const UserForm = () => {
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button type="submit" disabled={createUserMutation.isPending}>
+                  {createUserMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Salvar
                 </Button>
               </div>

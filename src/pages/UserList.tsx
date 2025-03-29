@@ -1,36 +1,34 @@
 
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/AdminLayout';
 import { useToast } from '@/components/ui/use-toast';
 import { fetchUsers, User } from '@/services/users';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const loadUsers = async () => {
-      setIsLoading(true);
-      try {
-        const data = await fetchUsers();
-        setUsers(data);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Erro ao carregar usuários",
-          description: error instanceof Error ? error.message : "Ocorreu um erro ao carregar a lista de usuários",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadUsers();
-  }, [toast]);
+  const { data: users = [], isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    onError: (err) => {
+      toast({
+        variant: "destructive",
+        title: "Erro ao carregar usuários",
+        description: err instanceof Error ? err.message : "Ocorreu um erro ao carregar a lista de usuários",
+      });
+    }
+  });
 
   return (
     <AdminLayout>
@@ -45,45 +43,45 @@ const UserList = () => {
           </Link>
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Data de Criação
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+                <TableHead>Data de Criação</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={2} className="px-6 py-4 text-center">
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center py-6">
                     Carregando...
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center py-6 text-red-500">
+                    Erro ao carregar dados
+                  </TableCell>
+                </TableRow>
               ) : users.length === 0 ? (
-                <tr>
-                  <td colSpan={2} className="px-6 py-4 text-center">
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center py-6">
                     Nenhum usuário encontrado
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {user.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <TableRow key={user.id}>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
                       {new Date(user.created_at).toLocaleDateString()}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </AdminLayout>

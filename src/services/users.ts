@@ -9,13 +9,19 @@ export type User = {
 
 export const fetchUsers = async (): Promise<User[]> => {
   try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, email, created_at');
+    // First fetch auth users with the admin API
+    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
     
-    if (error) throw error;
+    if (authError) throw authError;
     
-    return data || [];
+    // Map the auth users to the format we need
+    const users: User[] = authUsers.users.map(user => ({
+      id: user.id,
+      email: user.email || '',
+      created_at: user.created_at || new Date().toISOString()
+    }));
+    
+    return users;
   } catch (error) {
     console.error('Error fetching users:', error);
     throw error;
