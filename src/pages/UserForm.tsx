@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import AdminLayout from '@/components/AdminLayout';
 import { supabase } from '@/integrations/supabase/client';
 
 const formSchema = z.object({
@@ -25,7 +26,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const Auth = () => {
+const UserForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -41,18 +42,25 @@ const Auth = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.admin.createUser({
         email: data.email,
         password: data.password,
+        email_confirm: true,
       });
       
       if (error) throw error;
-      navigate('/');
+      
+      toast({
+        title: "Usuário criado com sucesso",
+        description: `O usuário ${data.email} foi criado com sucesso.`,
+      });
+      
+      navigate('/users');
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Ocorreu um erro ao processar sua solicitação",
+        title: "Erro ao criar usuário",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao criar o usuário",
       });
     } finally {
       setIsLoading(false);
@@ -60,21 +68,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <div className="flex justify-center mb-6">
-            <img 
-              src="/lovable-uploads/98e8b175-8e94-4ac4-9cea-97e855cc8421.png" 
-              alt="Logo" 
-              className="h-24 w-auto"
-            />
-          </div>
-          
-          <h1 className="text-2xl font-bold text-center mb-6">
-            Entrar
-          </h1>
-
+    <AdminLayout>
+      <div className="container mx-auto py-6">
+        <h1 className="text-2xl font-bold mb-6">Novo Usuário</h1>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -84,7 +82,7 @@ const Auth = () => {
                   <FormItem>
                     <FormLabel>E-mail</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="seu@email.com" {...field} />
+                      <Input type="email" placeholder="email@exemplo.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,16 +103,25 @@ const Auth = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Entrar
-              </Button>
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => navigate('/users')}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Salvar
+                </Button>
+              </div>
             </form>
           </Form>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
-export default Auth;
+export default UserForm;

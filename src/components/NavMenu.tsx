@@ -1,4 +1,5 @@
-import { School, Users, Newspaper, Home, LogOut, QrCode, Calendar } from 'lucide-react';
+
+import { School, Users, Newspaper, Home, LogOut, QrCode, Calendar, UserPlus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -21,6 +22,7 @@ const NavMenu = () => {
     { path: '/classes', icon: School, label: 'Aulas' },
     { path: '/news', icon: Newspaper, label: 'Notícias' },
     { path: '/links', icon: QrCode, label: 'Links QR' },
+    { path: '/users', icon: UserPlus, label: 'Usuários' },
   ];
 
   const links = isAuthenticated ? [...publicLinks, ...privateLinks] : publicLinks;

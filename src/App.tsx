@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,8 @@ import NewsList from "./pages/NewsList";
 import NewsForm from "./pages/NewsForm";
 import LinkList from "./pages/LinkList";
 import LinkForm from "./pages/LinkForm";
+import UserList from "./pages/UserList";
+import UserForm from "./pages/UserForm";
 import NotFound from "./pages/NotFound";
 import ScheduleTable from "./pages/ScheduleTable";
 
@@ -94,6 +97,17 @@ const App = () => (
           <Route path="/links/edit/:id" element={
             <ProtectedRoute>
               <LinkForm />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/users" element={
+            <ProtectedRoute>
+              <UserList />
+            </ProtectedRoute>
+          } />
+          <Route path="/users/new" element={
+            <ProtectedRoute>
+              <UserForm />
             </ProtectedRoute>
           } />
           
