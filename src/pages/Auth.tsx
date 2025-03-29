@@ -27,6 +27,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -41,13 +42,24 @@ const Auth = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-      
-      if (error) throw error;
-      navigate('/');
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+        });
+        if (error) throw error;
+        toast({
+          title: "Conta criada com sucesso",
+          description: "Verifique seu e-mail para confirmar o cadastro.",
+        });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
+        if (error) throw error;
+        navigate('/');
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -72,7 +84,7 @@ const Auth = () => {
           </div>
           
           <h1 className="text-2xl font-bold text-center mb-6">
-            Entrar
+            {isSignUp ? 'Criar conta' : 'Entrar'}
           </h1>
 
           <Form {...form}>
@@ -107,10 +119,21 @@ const Auth = () => {
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Entrar
+                {isSignUp ? 'Cadastrar' : 'Entrar'}
               </Button>
             </form>
           </Form>
+
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-sm text-primary hover:underline"
+            >
+              {isSignUp
+                ? 'Já tem uma conta? Entre aqui'
+                : 'Não tem uma conta? Cadastre-se'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
