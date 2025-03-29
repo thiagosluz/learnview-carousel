@@ -1,4 +1,5 @@
-import { NavMenu } from "@/components/NavMenu";
+
+import NavMenu from "@/components/NavMenu";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -25,4 +26,4 @@ export const Header = () => {
       </div>
     </div>
   );
-}; 
+};

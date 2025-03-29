@@ -5,13 +5,7 @@ import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/AdminLayout';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-
-type User = {
-  id: string;
-  email: string;
-  created_at: string;
-};
+import { fetchUsers, User } from '@/services/users';
 
 const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,14 +13,11 @@ const UserList = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const loadUsers = async () => {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase.from('users').select('id, email, created_at');
-        
-        if (error) throw error;
-        
-        setUsers(data || []);
+        const data = await fetchUsers();
+        setUsers(data);
       } catch (error) {
         toast({
           variant: "destructive",
@@ -38,7 +29,7 @@ const UserList = () => {
       }
     };
 
-    fetchUsers();
+    loadUsers();
   }, [toast]);
 
   return (

@@ -10,7 +10,7 @@ export type User = {
 export const fetchUsers = async (): Promise<User[]> => {
   try {
     const { data, error } = await supabase
-      .from('users')
+      .from('profiles')
       .select('id, email, created_at');
     
     if (error) throw error;
