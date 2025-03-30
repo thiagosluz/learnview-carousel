@@ -69,7 +69,7 @@ const ScheduleTable = () => {
   const [selectedDia, setSelectedDia] = useState<string>(getCurrentDayOfWeek());
 
   const { data: classes = [], isLoading } = useQuery<Class[]>({
-    queryKey: ['schedule'],
+    queryKey: ['all-schedule'],
     queryFn: fetchSchedule,
   });
 

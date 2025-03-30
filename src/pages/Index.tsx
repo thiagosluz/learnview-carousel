@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -19,7 +18,7 @@ const Index = () => {
     isLoading: isLoadingClasses,
     error: classesError,
   } = useQuery<Class[]>({
-    queryKey: ['classes'],
+    queryKey: ['today-classes'],
     queryFn: fetchTodayClasses,
     refetchInterval: DATA_REFRESH_INTERVAL,
     retry: 2,

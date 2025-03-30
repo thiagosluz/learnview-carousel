@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from "@/components/ui/use-toast";
@@ -26,7 +25,7 @@ const ClassList = () => {
   const [labFilter, setLabFilter] = useState<string[]>([]);
 
   const { data: classes = [], isLoading, refetch } = useQuery<Class[]>({
-    queryKey: ['classes'],
+    queryKey: ['all-classes'],
     queryFn: fetchAllClasses,
     meta: {
       errorMessage: 'Não foi possível carregar a lista de aulas',
