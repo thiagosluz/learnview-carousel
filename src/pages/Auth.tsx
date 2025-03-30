@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { supabase } from '@/integrations/supabase/client';
+
+// Configuração para habilitar/desabilitar o cadastro
+const SIGNUP_ENABLED = false;
 
 const formSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -42,7 +44,7 @@ const Auth = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      if (isSignUp) {
+      if (isSignUp && SIGNUP_ENABLED) {
         const { error } = await supabase.auth.signUp({
           email: data.email,
           password: data.password,
@@ -124,16 +126,19 @@ const Auth = () => {
             </form>
           </Form>
 
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-primary hover:underline"
-            >
-              {isSignUp
-                ? 'Já tem uma conta? Entre aqui'
-                : 'Não tem uma conta? Cadastre-se'}
-            </button>
-          </div>
+          {/* Opção de cadastro condicionada à constante SIGNUP_ENABLED */}
+          {SIGNUP_ENABLED && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-sm text-primary hover:underline"
+              >
+                {isSignUp
+                  ? 'Já tem uma conta? Entre aqui'
+                  : 'Não tem uma conta? Cadastre-se'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

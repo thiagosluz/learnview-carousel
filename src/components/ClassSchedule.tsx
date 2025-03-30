@@ -1,4 +1,3 @@
-
 import { Class } from '@/types';
 import { useClassGroups } from '@/hooks/useClassGroups';
 import ClassCarousel from '@/components/ClassCarousel';
@@ -10,11 +9,16 @@ interface ClassScheduleProps {
 
 const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const { classGroups, currentClasses } = useClassGroups(classes);
+  
+  // Extrair o período do texto da data
+  const period = date.split('-')[1]?.trim() || '';
 
   if (classes.length === 0) {
     return (
       <div className="w-full h-full p-8 bg-linear-to-br from-primary/5 to-secondary rounded-2xl shadow-lg flex items-center justify-center">
-        <p className="text-xl text-gray-500">Nenhuma aula programada para hoje</p>
+        <p className="text-xl text-gray-500">
+          Nenhuma aula programada para o {period.toLowerCase()}
+        </p>
       </div>
     );
   }
