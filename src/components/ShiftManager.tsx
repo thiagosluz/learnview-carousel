@@ -1,25 +1,26 @@
-
 import { useState, useEffect } from 'react';
 import { Class } from '@/types';
 
 export const useShiftManager = (allClasses: Class[]) => {
-  const [currentShift, setCurrentShift] = useState<'morning' | 'afternoon' | 'night'>('morning');
+  const [currentShift, setCurrentShift] = useState<'morning' | 'afternoon' | 'night'>(getCurrentShift());
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
-  const determineShiftAndFilterClasses = (classes: Class[]) => {
-    const now = new Date();
-    const currentTime = now.getHours();
-
-    let shift: 'morning' | 'afternoon' | 'night';
+  // Função para determinar o período atual baseado na hora
+  function getCurrentShift(): 'morning' | 'afternoon' | 'night' {
+    const currentTime = new Date().getHours();
+    
     if (currentTime >= 0 && currentTime < 12) {
-      shift = 'morning';
+      return 'morning';
     } else if (currentTime >= 12 && currentTime < 18) {
-      shift = 'afternoon';
+      return 'afternoon';
     } else {
-      shift = 'night';
+      return 'night';
     }
+  }
 
-    const filtered = classes.filter(classItem => {
+  // Função para filtrar as aulas do período atual
+  const filterClassesByShift = (classes: Class[], shift: 'morning' | 'afternoon' | 'night') => {
+    return classes.filter(classItem => {
       const classHour = parseInt(classItem.start_time.split(':')[0]);
       
       switch (shift) {
@@ -31,31 +32,27 @@ export const useShiftManager = (allClasses: Class[]) => {
           return classHour >= 18 || classHour < 6;
       }
     });
-
-    setCurrentShift(shift);
-    setFilteredClasses(filtered);
   };
 
+  // Atualiza o período atual a cada minuto
   useEffect(() => {
-    if (allClasses.length > 0) {
-      determineShiftAndFilterClasses(allClasses);
-    }
-  }, [allClasses]);
-
-  useEffect(() => {
-    const SHIFT_UPDATE_INTERVAL = 60000; // 1 minute
-    
     const updateShift = () => {
+      const newShift = getCurrentShift();
+      setCurrentShift(newShift);
+      
       if (allClasses.length > 0) {
-        determineShiftAndFilterClasses(allClasses);
+        const filtered = filterClassesByShift(allClasses, newShift);
+        setFilteredClasses(filtered);
       }
     };
 
-    const shiftInterval = setInterval(updateShift, SHIFT_UPDATE_INTERVAL);
+    // Atualiza imediatamente
+    updateShift();
 
-    return () => {
-      clearInterval(shiftInterval);
-    };
+    // Configura o intervalo para atualizar a cada minuto
+    const interval = setInterval(updateShift, 60000);
+
+    return () => clearInterval(interval);
   }, [allClasses]);
 
   const getShiftText = () => {
