@@ -32,7 +32,7 @@ const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   if (classes.length === 0) {
     return (
       <div className="w-full h-full p-8 bg-linear-to-br from-primary/5 to-secondary rounded-2xl shadow-lg flex flex-col items-center justify-center gap-4">
-        <p className="text-xl text-gray-500">
+        <p className="text-xl text-gray-500 text-center">
           Nenhuma aula programada para o {period.toLowerCase()}
         </p>
         <ViewAllButton />
