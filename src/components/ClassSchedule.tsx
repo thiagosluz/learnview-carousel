@@ -11,8 +11,8 @@ interface ClassScheduleProps {
 const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const { classGroups, currentClasses } = useClassGroups(classes);
   
-  // Extrair o período do texto da data
-  const period = date.split('-')[1]?.trim() || '';
+  // Extrair o período do texto da data (última parte após o hífen)
+  const period = date.split('-').pop()?.trim() || '';
 
   const ViewAllButton = () => (
     <a href="/horarios">
