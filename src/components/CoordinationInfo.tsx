@@ -51,7 +51,7 @@ const CoordinationInfo = () => {
                   className="bg-white p-1 rounded-lg cursor-pointer"
                 />
               </a>
-              <span className="text-sm font-medium text-gray-600">{link.name}</span>
+              <span className="text-sm font-medium text-gray-600 text-center">{link.name}</span>
             </div>
           ))}
         </div>
