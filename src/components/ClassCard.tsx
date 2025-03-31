@@ -1,5 +1,5 @@
 
-import { Clock, MapPin, BookOpen } from 'lucide-react';
+import { Clock, MapPin, BookOpen, Calendar } from 'lucide-react';
 import { Class } from '@/types';
 import { getClassHighlightColor } from '@/utils/courseColors';
 
@@ -27,6 +27,9 @@ const ClassCard = ({ classItem, isActive, originalIndex }: ClassCardProps) => {
             <div className="flex items-center gap-1.5 text-xs lg:text-sm font-semibold">
               <BookOpen className="w-3.5 h-3.5 shrink-0" />
               <span>{classItem.course}</span>
+              {classItem.period && (
+                <span className="ml-1">- {classItem.period}</span>
+              )}
             </div>
             <h3 className="text-sm lg:text-base font-bold mt-0.5 break-words">{classItem.subject}</h3>
             <div className="flex items-center justify-between mt-0.5">

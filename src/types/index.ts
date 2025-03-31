@@ -14,6 +14,7 @@ export interface Class {
   lab: string;
   day_of_week: number;
   course: string;
+  period?: string;
 }
 
 export interface NewsItem {

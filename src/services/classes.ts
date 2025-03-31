@@ -16,6 +16,7 @@ export async function fetchTodayClasses(): Promise<Class[]> {
         lab,
         day_of_week,
         course,
+        period,
         professor:professors(id, name, photo_url)
       `)
       .eq('day_of_week', today)
@@ -48,6 +49,7 @@ export async function fetchAllClasses(): Promise<Class[]> {
         lab,
         day_of_week,
         course,
+        period,
         professor:professors(id, name, photo_url)
       `)
       .order('day_of_week')
@@ -80,6 +82,7 @@ export async function fetchClass(id: string): Promise<Class> {
         lab,
         day_of_week,
         course,
+        period,
         professor:professors(id, name, photo_url)
       `)
       .eq('id', id)
@@ -109,6 +112,7 @@ export async function createClass({
   lab,
   day_of_week,
   course,
+  period,
 }: {
   subject: string;
   start_time: string;
@@ -117,6 +121,7 @@ export async function createClass({
   lab: string;
   day_of_week: number;
   course: string;
+  period?: string;
 }): Promise<void> {
   try {
     const { error } = await supabase
@@ -129,6 +134,7 @@ export async function createClass({
         lab,
         day_of_week,
         course,
+        period,
       }]);
 
     if (error) throw error;
@@ -148,6 +154,7 @@ export async function updateClass(
     lab,
     day_of_week,
     course,
+    period,
   }: {
     subject: string;
     start_time: string;
@@ -156,6 +163,7 @@ export async function updateClass(
     lab: string;
     day_of_week: number;
     course: string;
+    period?: string;
   }
 ): Promise<void> {
   try {
@@ -169,6 +177,7 @@ export async function updateClass(
         lab,
         day_of_week,
         course,
+        period,
       })
       .eq('id', id);
 

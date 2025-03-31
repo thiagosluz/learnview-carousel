@@ -17,6 +17,7 @@ export type Database = {
           end_time: string
           id: string
           lab: string
+          period: string | null
           professor_id: string
           start_time: string
           subject: string
@@ -28,6 +29,7 @@ export type Database = {
           end_time: string
           id?: string
           lab: string
+          period?: string | null
           professor_id: string
           start_time: string
           subject: string
@@ -39,6 +41,7 @@ export type Database = {
           end_time?: string
           id?: string
           lab?: string
+          period?: string | null
           professor_id?: string
           start_time?: string
           subject?: string

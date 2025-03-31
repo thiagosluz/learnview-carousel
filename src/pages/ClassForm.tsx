@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -59,6 +60,7 @@ const ClassForm = () => {
   const [lab, setLab] = useState(LABORATORIOS[0]);
   const [dayOfWeek, setDayOfWeek] = useState<string>('');
   const [course, setCourse] = useState('TADS');
+  const [period, setPeriod] = useState<string>('');
 
   const { data: professors = [] } = useQuery<Professor[]>({
     queryKey: ['professors'],
@@ -75,6 +77,7 @@ const ClassForm = () => {
         setLab(class_.lab);
         setDayOfWeek(class_.day_of_week.toString());
         setCourse(class_.course || 'TADS'); // Default to TADS if not set
+        setPeriod(class_.period || ''); // Set period if available
       }).catch((error) => {
         toast({
           variant: "destructive",
@@ -85,6 +88,21 @@ const ClassForm = () => {
       });
     }
   }, [id, isEditMode, navigate, toast]);
+
+  // Get period options based on selected course
+  const getPeriodOptions = () => {
+    if (course === 'TADS') {
+      return Array.from({ length: 6 }, (_, i) => ({ value: `${i + 1}`, label: `${i + 1}º Período` }));
+    } else if (course === 'MSI') {
+      return Array.from({ length: 3 }, (_, i) => ({ value: `${i + 1} ano`, label: `${i + 1}º Ano` }));
+    } else if (course === 'Esp. IE') {
+      return [
+        { value: '2025/01', label: '2025/01' },
+        { value: '2025/02', label: '2025/02' }
+      ];
+    }
+    return [];
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,6 +117,7 @@ const ClassForm = () => {
           lab,
           day_of_week: parseInt(dayOfWeek),
           course,
+          period,
         });
         toast({
           title: "Aula atualizada",
@@ -113,6 +132,7 @@ const ClassForm = () => {
           lab,
           day_of_week: parseInt(dayOfWeek),
           course,
+          period,
         });
         toast({
           title: "Aula cadastrada",
@@ -192,7 +212,10 @@ const ClassForm = () => {
             <Label>Curso</Label>
             <RadioGroup 
               value={course} 
-              onValueChange={setCourse}
+              onValueChange={(value) => {
+                setCourse(value);
+                setPeriod(''); // Reset period when course changes
+              }}
               className="flex flex-col space-y-2 mt-1"
             >
               {COURSES.map((courseOption) => (
@@ -204,6 +227,22 @@ const ClassForm = () => {
                 </div>
               ))}
             </RadioGroup>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="period">Período</Label>
+            <Select value={period} onValueChange={setPeriod}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o período" />
+              </SelectTrigger>
+              <SelectContent>
+                {getPeriodOptions().map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">

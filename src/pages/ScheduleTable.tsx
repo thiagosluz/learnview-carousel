@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -193,6 +194,7 @@ const ScheduleTable = () => {
                                 aula.course === 'Esp. IE' && "bg-green-100 text-green-800"
                               )}>
                                 {aula.course}
+                                {aula.period && ` - ${aula.period}`}
                               </span>
                               <p className="text-gray-500 text-sm mt-1">
                                 {aula.lab}
@@ -227,4 +229,4 @@ const ScheduleTable = () => {
   );
 };
 
-export default ScheduleTable; 
+export default ScheduleTable;
