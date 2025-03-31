@@ -23,6 +23,8 @@ export async function fetchTodayClasses(): Promise<Class[]> {
       .order('start_time');
 
     if (error) throw error;
+    
+    if (!classes) return [];
 
     return classes.map(cls => ({
       ...cls,
@@ -56,6 +58,8 @@ export async function fetchAllClasses(): Promise<Class[]> {
       .order('start_time');
 
     if (error) throw error;
+    
+    if (!classes) return [];
 
     return classes.map(cls => ({
       ...cls,
