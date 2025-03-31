@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -92,13 +91,19 @@ const ClassForm = () => {
   // Get period options based on selected course
   const getPeriodOptions = () => {
     if (course === 'TADS') {
-      return Array.from({ length: 6 }, (_, i) => ({ value: `${i + 1} º Período`, label: `${i + 1}º Período` }));
+      return Array.from({ length: 6 }, (_, i) => {
+        const period = `${i + 1}º Período`;
+        return { value: period, label: period };
+      });
     } else if (course === 'MSI') {
-      return Array.from({ length: 3 }, (_, i) => ({ value: `${i + 1} º Ano`, label: `${i + 1}º Ano` }));
+      return Array.from({ length: 3 }, (_, i) => {
+        const period = `${i + 1}º Ano`;
+        return { value: period, label: period };
+      });
     } else if (course === 'Esp. IE') {
       return [
-        { value: '2025/01', label: '2025/01' },
-        { value: '2025/02', label: '2025/02' }
+        { value: 'Turma 2025/01', label: 'Turma 2025/01' },
+        { value: 'Turma 2025/02', label: 'Turma 2025/02' }
       ];
     }
     return [];
