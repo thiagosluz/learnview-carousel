@@ -1,4 +1,3 @@
-
 import { Pencil, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DIAS_SEMANA } from './ClassListFilters';
+import { cn } from '@/lib/utils';
 
 interface ClassTableProps {
   classes: Class[];
@@ -57,6 +57,8 @@ export const ClassTable = ({
           <TableHead>Professor</TableHead>
           <TableHead>Disciplina</TableHead>
           <TableHead>Laboratório</TableHead>
+          <TableHead>Curso</TableHead>
+          <TableHead>Período</TableHead>
           <TableHead className="w-[100px]">Ações</TableHead>
         </TableRow>
       </TableHeader>
@@ -74,6 +76,23 @@ export const ClassTable = ({
             <TableCell>{class_.professor.name}</TableCell>
             <TableCell>{class_.subject}</TableCell>
             <TableCell>{class_.lab}</TableCell>
+            <TableCell>
+              <span className={cn(
+                "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
+                class_.course === 'TADS' && "bg-blue-100 text-blue-800",
+                class_.course === 'MSI' && "bg-purple-100 text-purple-800",
+                class_.course === 'Esp. IE' && "bg-green-100 text-green-800"
+              )}>
+                {class_.course}
+              </span>
+            </TableCell>
+            <TableCell>
+              {class_.period && (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  {class_.period}
+                </span>
+              )}
+            </TableCell>
             <TableCell>
               <div className="flex gap-2">
                 <Link to={`/classes/edit/${class_.id}`}>

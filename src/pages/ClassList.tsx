@@ -23,6 +23,8 @@ const ClassList = () => {
   const [professorFilter, setProfessorFilter] = useState<string>('');
   const [subjectFilter, setSubjectFilter] = useState<string>('');
   const [labFilter, setLabFilter] = useState<string[]>([]);
+  const [courseFilter, setCourseFilter] = useState<string>('all');
+  const [periodFilter, setPeriodFilter] = useState<string>('all');
 
   const { data: classes = [], isLoading, refetch } = useQuery<Class[]>({
     queryKey: ['all-classes'],
@@ -49,8 +51,10 @@ const ClassList = () => {
     const matchesSubject = !subjectFilter || 
       class_.subject.toLowerCase().includes(subjectFilter.toLowerCase());
     const matchesLab = labFilter.length === 0 || labFilter.includes(class_.lab);
+    const matchesCourse = courseFilter === 'all' || class_.course === courseFilter;
+    const matchesPeriod = periodFilter === 'all' || class_.period === periodFilter;
 
-    return matchesDay && matchesTime && matchesProfessor && matchesSubject && matchesLab;
+    return matchesDay && matchesTime && matchesProfessor && matchesSubject && matchesLab && matchesCourse && matchesPeriod;
   });
 
   const totalPages = Math.ceil(filteredClasses.length / ITEMS_PER_PAGE);
@@ -69,6 +73,8 @@ const ClassList = () => {
     setProfessorFilter('');
     setSubjectFilter('');
     setLabFilter([]);
+    setCourseFilter('all');
+    setPeriodFilter('all');
     setCurrentPage(1);
   };
 
@@ -148,7 +154,13 @@ const ClassList = () => {
     );
   }
 
-  const hasActiveFilters = dayFilter !== 'all' || !!timeFilter || !!professorFilter || !!subjectFilter || labFilter.length > 0;
+  const hasActiveFilters = dayFilter !== 'all' || 
+    !!timeFilter || 
+    !!professorFilter || 
+    !!subjectFilter || 
+    labFilter.length > 0 || 
+    courseFilter !== 'all' || 
+    periodFilter !== 'all';
 
   return (
     <AdminLayout>
@@ -165,12 +177,16 @@ const ClassList = () => {
           professorFilter={professorFilter}
           subjectFilter={subjectFilter}
           labFilter={labFilter}
+          courseFilter={courseFilter}
+          periodFilter={periodFilter}
           onFilterChange={handleFilterChange}
           setDayFilter={setDayFilter}
           setTimeFilter={setTimeFilter}
           setProfessorFilter={setProfessorFilter}
           setSubjectFilter={setSubjectFilter}
           setLabFilter={setLabFilter}
+          setCourseFilter={setCourseFilter}
+          setPeriodFilter={setPeriodFilter}
           clearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
         />

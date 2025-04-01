@@ -47,18 +47,48 @@ export const LABORATORIOS = [
   'EAD'
 ];
 
+export const CURSOS = [
+  { id: 'TADS', name: 'TADS - Tecnologia em Análise e Desenvolvimento de Sistemas' },
+  { id: 'MSI', name: 'MSI - Manutenção e Suporte em Informática' },
+  { id: 'Esp. IE', name: 'Especialização em Informática na Educação' },
+];
+
+const getPeriodOptions = (course: string) => {
+  if (course === 'TADS') {
+    return Array.from({ length: 6 }, (_, i) => {
+      const period = `${i + 1}º Período`;
+      return { value: period, label: period };
+    });
+  } else if (course === 'MSI') {
+    return Array.from({ length: 3 }, (_, i) => {
+      const period = `${i + 1}º Ano`;
+      return { value: period, label: period };
+    });
+  } else if (course === 'Esp. IE') {
+    return [
+      { value: 'Turma 2025/01', label: 'Turma 2025/01' },
+      { value: 'Turma 2025/02', label: 'Turma 2025/02' }
+    ];
+  }
+  return [];
+};
+
 interface ClassListFiltersProps {
   dayFilter: string;
   timeFilter: string;
   professorFilter: string;
   subjectFilter: string;
   labFilter: string[];
+  courseFilter: string;
+  periodFilter: string;
   onFilterChange: (value: string | string[], setFilter: (value: any) => void) => void;
   setDayFilter: (value: string) => void;
   setTimeFilter: (value: string) => void;
   setProfessorFilter: (value: string) => void;
   setSubjectFilter: (value: string) => void;
   setLabFilter: (value: string[]) => void;
+  setCourseFilter: (value: string) => void;
+  setPeriodFilter: (value: string) => void;
   clearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -69,18 +99,65 @@ export const ClassListFilters = ({
   professorFilter,
   subjectFilter,
   labFilter,
+  courseFilter,
+  periodFilter,
   onFilterChange,
   setDayFilter,
   setTimeFilter,
   setProfessorFilter,
   setSubjectFilter,
   setLabFilter,
+  setCourseFilter,
+  setPeriodFilter,
   clearFilters,
   hasActiveFilters
 }: ClassListFiltersProps) => {
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="relative">
+          <Select
+            value={courseFilter}
+            onValueChange={(value) => {
+              onFilterChange(value, setCourseFilter);
+              setPeriodFilter('all'); // Reset period when course changes
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione o curso" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os cursos</SelectItem>
+              {CURSOS.map((curso) => (
+                <SelectItem key={curso.id} value={curso.id}>
+                  {curso.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {courseFilter !== 'all' && (
+          <div className="relative">
+            <Select
+              value={periodFilter}
+              onValueChange={(value) => onFilterChange(value, setPeriodFilter)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o período" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os períodos</SelectItem>
+                {getPeriodOptions(courseFilter).map((period) => (
+                  <SelectItem key={period.value} value={period.value}>
+                    {period.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <div className="relative">
           <Select
             value={dayFilter}
