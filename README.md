@@ -1,69 +1,70 @@
-# Welcome to your Lovable project
+# CINFO Painel
 
-## Project info
+## Informações do Projeto
 
-**URL**: https://lovable.dev/projects/f201c50b-1638-4d1a-98e4-f5a7c94eda11
+**URL**: xxxxxx
 
-## How can I edit this code?
+## Como executar o projeto
 
-There are several ways of editing your application.
+### Usando Docker
 
-**Use Lovable**
+O projeto está configurado com Docker e Docker Compose para facilitar a execução. O ambiente inclui:
+- Node.js para build
+- Nginx como servidor web
+- Certificados SSL auto-assinados para HTTPS local
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f201c50b-1638-4d1a-98e4-f5a7c94eda11) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Para executar o projeto usando Docker, siga os passos abaixo:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Passo 1: Construir e iniciar os containers usando Docker Compose
+docker compose up --build
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Para executar em segundo plano, adicione a flag -d
+docker compose up -d --build
+```
 
-# Step 3: Install the necessary dependencies.
+O aplicativo estará disponível em:
+- HTTP: `http://localhost:80`
+- HTTPS: `https://localhost:443`
+
+Para parar os containers:
+```sh
+docker compose down
+```
+
+### Executando localmente
+
+Para executar o projeto localmente sem Docker, você precisa ter Node.js & npm instalados - [instale usando nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Siga estes passos:
+
+```sh
+# Passo 1: Clone o repositório usando a URL Git do projeto
+git clone <URL_DO_GIT>
+
+# Passo 2: Entre no diretório do projeto
+cd learnview-carousel
+
+# Passo 3: Instale as dependências necessárias
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Passo 4: Inicie o servidor de desenvolvimento com auto-reloading e preview instantâneo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Tecnologias Utilizadas
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
+Este projeto foi construído com:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Docker
+- Nginx
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/f201c50b-1638-4d1a-98e4-f5a7c94eda11) and click on Share -> Publish.
+## Licença
 
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
