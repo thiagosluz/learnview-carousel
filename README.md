@@ -1,4 +1,4 @@
-# CINFO Painel
+# Learnview Carousel
 
 ## Informações do Projeto
 
@@ -11,7 +11,6 @@
 O projeto está configurado com Docker e Docker Compose para facilitar a execução. O ambiente inclui:
 - Node.js para build
 - Nginx como servidor web
-- Certificados SSL auto-assinados para HTTPS local
 
 Para executar o projeto usando Docker, siga os passos abaixo:
 
@@ -24,13 +23,24 @@ docker compose up -d --build
 ```
 
 O aplicativo estará disponível em:
-- HTTP: `http://localhost:80`
-- HTTPS: `https://localhost:443`
+- HTTP: `http://localhost:8082`
 
 Para parar os containers:
 ```sh
 docker compose down
 ```
+
+#### Configuração de Portas
+
+As portas do aplicativo podem ser configuradas através de variáveis de ambiente. Por padrão, o aplicativo roda na porta 8082.
+
+Para alterar as portas, você pode:
+1. Criar um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+   ```
+   PORT=8082        # Porta externa (host)
+   INTERNAL_PORT=80 # Porta interna (container)
+   ```
+2. Ou definir as variáveis diretamente no ambiente antes de executar o docker-compose
 
 ### Executando localmente
 
