@@ -14,6 +14,7 @@ const NavMenu = () => {
   const publicLinks = [
     { path: '/', icon: Home, label: 'Início' },
     { path: '/horarios', icon: Calendar, label: 'Horários' },
+    { path: '/professores', icon: Users, label: 'Professores' },
   ];
 
   const privateLinks = [

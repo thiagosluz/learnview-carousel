@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Professor } from '@/types';
 
@@ -35,7 +34,7 @@ export async function fetchProfessor(id: string): Promise<Professor> {
   }
 }
 
-export async function createProfessor({ name, photo }: { name: string; photo?: File }): Promise<void> {
+export async function createProfessor({ name, photo, minicurriculo }: { name: string; photo?: File; minicurriculo?: string }): Promise<void> {
   try {
     let photo_url = '';
     
@@ -58,7 +57,7 @@ export async function createProfessor({ name, photo }: { name: string; photo?: F
 
     const { error } = await supabase
       .from('professors')
-      .insert([{ name, photo_url }]);
+      .insert([{ name, photo_url, minicurriculo }]);
 
     if (error) throw error;
   } catch (error) {
@@ -69,10 +68,14 @@ export async function createProfessor({ name, photo }: { name: string; photo?: F
 
 export async function updateProfessor(
   id: string, 
-  { name, photo }: { name: string; photo?: File }
+  { name, photo, minicurriculo }: { name: string; photo?: File; minicurriculo?: string }
 ): Promise<void> {
   try {
-    const updates: { name: string; photo_url?: string } = { name };
+    const updates: { name: string; photo_url?: string; minicurriculo?: string } = { name };
+
+    if (minicurriculo !== undefined) {
+      updates.minicurriculo = minicurriculo;
+    }
 
     if (photo) {
       // Deletar foto antiga

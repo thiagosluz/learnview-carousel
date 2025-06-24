@@ -22,6 +22,7 @@ import { ProfessorImageUpload } from '@/components/professor/ProfessorImageUploa
 const formSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   photo: z.instanceof(File).optional(),
+  minicurriculo: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -37,6 +38,7 @@ const ProfessorForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      minicurriculo: '',
     },
   });
 
@@ -47,6 +49,7 @@ const ProfessorForm = () => {
           const professor = await fetchProfessor(id);
           form.reset({
             name: professor.name,
+            minicurriculo: professor.minicurriculo || '',
           });
           setPreviewUrl(professor.photo_url);
         } catch (error) {
@@ -94,7 +97,8 @@ const ProfessorForm = () => {
         await updateProfessor(id, {
           name: data.name,
           photo: data.photo,
-        });
+          minicurriculo: data.minicurriculo,
+        } as any);
         toast({
           title: "Professor atualizado",
           description: "Os dados do professor foram atualizados com sucesso.",
@@ -103,7 +107,8 @@ const ProfessorForm = () => {
         await createProfessor({
           name: data.name,
           photo: data.photo,
-        });
+          minicurriculo: data.minicurriculo,
+        } as any);
         toast({
           title: "Professor cadastrado",
           description: "O professor foi cadastrado com sucesso.",
@@ -161,6 +166,24 @@ const ProfessorForm = () => {
                     <ProfessorImageUpload
                       previewUrl={previewUrl}
                       onImageChange={handlePhotoChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="minicurriculo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Minicurrículo</FormLabel>
+                  <FormControl>
+                    <textarea
+                      className="w-full border rounded p-2 min-h-[80px]"
+                      placeholder="Breve descrição do professor"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />

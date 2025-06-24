@@ -1,8 +1,9 @@
-
 export interface Professor {
   id: string;
   name: string;
   photo_url: string;
+  minicurriculo?: string;
+  disciplinas?: string[];
 }
 
 export interface Class {

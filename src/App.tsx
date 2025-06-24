@@ -18,6 +18,8 @@ import LinkList from "./pages/LinkList";
 import LinkForm from "./pages/LinkForm";
 import NotFound from "./pages/NotFound";
 import ScheduleTable from "./pages/ScheduleTable";
+import Professors from './pages/Professors';
+import ProfessorDetails from './pages/ProfessorDetails';
 
 const queryClient = new QueryClient();
 
@@ -96,6 +98,9 @@ const App = () => (
               <LinkForm />
             </ProtectedRoute>
           } />
+          
+          <Route path="/professores" element={<Professors />} />
+          <Route path="/professores/:id" element={<ProfessorDetails />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
