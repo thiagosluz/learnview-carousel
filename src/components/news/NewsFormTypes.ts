@@ -12,6 +12,8 @@ export const formSchema = z.object({
   publish_start: z.string().default(() => new Date().toISOString()),
   publish_end: z.string().nullable().optional(),
   course: z.string().nullable().default('all'),
+  link: z.string().url('URL inválida').nullable().optional().or(z.literal('')),
+  is_clickable: z.boolean().default(false),
 });
 
 export type FormData = z.infer<typeof formSchema>;

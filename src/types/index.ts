@@ -28,4 +28,6 @@ export interface NewsItem {
   publish_start: string;
   publish_end: string | null;
   course?: string | null;
+  link?: string | null;
+  is_clickable?: boolean;
 }

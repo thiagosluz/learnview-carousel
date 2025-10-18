@@ -12,6 +12,8 @@ export async function createNews({
   publish_start,
   publish_end,
   course,
+  link,
+  is_clickable,
 }: {
   title: string;
   type: 'text' | 'image';
@@ -22,6 +24,8 @@ export async function createNews({
   publish_start: string;
   publish_end?: string | null;
   course?: string | null;
+  link?: string | null;
+  is_clickable?: boolean;
 }): Promise<void> {
   try {
     let finalContent = content;
@@ -41,6 +45,8 @@ export async function createNews({
         publish_start,
         publish_end,
         course: course === 'all' ? null : course,
+        link: link || null,
+        is_clickable: is_clickable || false,
       }]);
 
     if (error) throw error;
@@ -62,6 +68,8 @@ export async function updateNews(
     publish_start,
     publish_end,
     course,
+    link,
+    is_clickable,
   }: {
     title: string;
     type: 'text' | 'image';
@@ -72,6 +80,8 @@ export async function updateNews(
     publish_start: string;
     publish_end?: string | null;
     course?: string | null;
+    link?: string | null;
+    is_clickable?: boolean;
   }
 ): Promise<void> {
   try {
@@ -92,6 +102,8 @@ export async function updateNews(
         publish_start,
         publish_end,
         course: course === 'all' ? null : course,
+        link: link || null,
+        is_clickable: is_clickable || false,
       })
       .eq('id', id);
 

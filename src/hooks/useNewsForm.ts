@@ -27,6 +27,8 @@ export const useNewsForm = () => {
       publish_start: new Date().toISOString().split('T')[0],
       publish_end: null,
       course: 'all',
+      link: '',
+      is_clickable: false,
     },
   });
 
@@ -44,6 +46,8 @@ export const useNewsForm = () => {
             publish_start: news.publish_start.split('T')[0],
             publish_end: news.publish_end ? news.publish_end.split('T')[0] : null,
             course: news.course || 'all',
+            link: news.link || '',
+            is_clickable: news.is_clickable || false,
           });
           if (news.type === 'image') {
             setPreviewUrl(news.content);
@@ -103,6 +107,8 @@ export const useNewsForm = () => {
           publish_start: publishStart,
           publish_end: publishEnd,
           course: data.course,
+          link: data.link || null,
+          is_clickable: data.is_clickable,
         });
         toast({
           title: "Notícia atualizada",
@@ -119,6 +125,8 @@ export const useNewsForm = () => {
           publish_start: publishStart,
           publish_end: publishEnd,
           course: data.course,
+          link: data.link || null,
+          is_clickable: data.is_clickable,
         });
         toast({
           title: "Notícia cadastrada",

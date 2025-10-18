@@ -9,6 +9,7 @@ import { CourseSelectField } from '@/components/news/CourseSelectField';
 import { ContentField } from '@/components/news/ContentField';
 import { DateTimeFields } from '@/components/news/DateTimeFields';
 import { ActiveToggleField } from '@/components/news/ActiveToggleField';
+import { LinkField } from '@/components/news/LinkField';
 import { useNewsForm } from '@/hooks/useNewsForm';
 
 const NewsForm = () => {
@@ -39,6 +40,8 @@ const NewsForm = () => {
               previewUrl={previewUrl} 
               onImageChange={handleImageChange} 
             />
+            
+            <LinkField form={form} />
             
             <DateTimeFields form={form} />
             

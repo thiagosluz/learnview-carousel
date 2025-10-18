@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { NewsItem } from '@/types';
 import { CourseTag } from './news/CourseTag';
 
@@ -10,6 +10,7 @@ interface NewsCarouselProps {
 const NewsCarousel = ({ items }: NewsCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const progressInterval = useRef<number>();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -31,7 +32,7 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
   };
 
   useEffect(() => {
-    if (items.length === 0) return;
+    if (items.length === 0 || isPaused) return;
     
     const duration = getCurrentDuration() * 1000;
     const interval = duration / 100;
@@ -55,7 +56,14 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
         clearInterval(progressInterval.current);
       }
     };
-  }, [currentIndex, items]);
+  }, [currentIndex, items, isPaused]);
+
+  const handleNewsClick = () => {
+    const item = items[currentIndex];
+    if (item.link) {
+      window.open(item.link, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -67,20 +75,51 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
 
   const renderContent = () => {
     const item = items[currentIndex];
+    const hasLink = item.link && item.link.trim() !== '';
+    const isClickable = hasLink && item.is_clickable;
+
+    const contentClass = hasLink ? 'cursor-pointer hover:opacity-95 transition-opacity' : '';
 
     switch (item.type) {
       case 'text':
         return (
-          <div className="flex flex-col items-center justify-center h-full p-6 md:p-12 text-center bg-linear-to-br from-primary/5 to-accent/20 relative">
+          <div 
+            className={`flex flex-col items-center justify-center h-full p-6 md:p-12 text-center bg-linear-to-br from-primary/5 to-accent/20 relative ${contentClass}`}
+            onClick={hasLink ? handleNewsClick : undefined}
+            onMouseEnter={() => hasLink && setIsPaused(true)}
+            onMouseLeave={() => hasLink && setIsPaused(false)}
+          >
             <CourseTag course={item.course} />
+            {isClickable && (
+              <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                <ExternalLink className="h-3 w-3" />
+                Clicável
+              </div>
+            )}
             <h2 className="text-2xl md:text-4xl font-display font-bold mb-4 md:mb-6 text-gray-900">{item.title}</h2>
             <p className="text-lg md:text-2xl leading-relaxed text-gray-700">{item.content}</p>
+            {hasLink && (
+              <div className="mt-4 text-primary font-medium flex items-center gap-2">
+                Clique para saber mais <ExternalLink className="h-4 w-4" />
+              </div>
+            )}
           </div>
         );
       case 'image':
         return (
-          <div className="relative h-full">
+          <div 
+            className={`relative h-full ${contentClass}`}
+            onClick={hasLink ? handleNewsClick : undefined}
+            onMouseEnter={() => hasLink && setIsPaused(true)}
+            onMouseLeave={() => hasLink && setIsPaused(false)}
+          >
             <CourseTag course={item.course} />
+            {isClickable && (
+              <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 z-10">
+                <ExternalLink className="h-3 w-3" />
+                Clicável
+              </div>
+            )}
             <img
               src={item.content}
               alt={item.title}
@@ -88,6 +127,11 @@ const NewsCarousel = ({ items }: NewsCarouselProps) => {
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-linear-to-t from-black/60 to-transparent">
               <h2 className="text-xl md:text-2xl font-bold text-white">{item.title}</h2>
+              {hasLink && (
+                <div className="mt-2 text-white/90 text-sm flex items-center gap-2">
+                  Clique para saber mais <ExternalLink className="h-3 w-3" />
+                </div>
+              )}
             </div>
           </div>
         );

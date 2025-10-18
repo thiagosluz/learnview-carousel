@@ -90,6 +90,8 @@ export type Database = {
           created_at: string | null
           duration: number
           id: string
+          is_clickable: boolean | null
+          link: string | null
           publish_end: string | null
           publish_start: string
           title: string
@@ -102,6 +104,8 @@ export type Database = {
           created_at?: string | null
           duration?: number
           id?: string
+          is_clickable?: boolean | null
+          link?: string | null
           publish_end?: string | null
           publish_start?: string
           title: string
@@ -114,6 +118,8 @@ export type Database = {
           created_at?: string | null
           duration?: number
           id?: string
+          is_clickable?: boolean | null
+          link?: string | null
           publish_end?: string | null
           publish_start?: string
           title?: string

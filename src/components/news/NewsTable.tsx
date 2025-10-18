@@ -39,6 +39,7 @@ export const NewsTable = ({
           </TableHead>
           <TableHead>Título</TableHead>
           <TableHead>Tipo</TableHead>
+          <TableHead>Link</TableHead>
           <TableHead>Duração (segundos)</TableHead>
           <TableHead>Início</TableHead>
           <TableHead>Fim</TableHead>

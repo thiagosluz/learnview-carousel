@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Pencil } from 'lucide-react';
+import { Pencil, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -57,6 +57,23 @@ export const NewsTableRow = ({
       <TableCell>{news.title}</TableCell>
       <TableCell>
         {news.type === 'text' ? 'Texto' : 'Imagem'}
+      </TableCell>
+      <TableCell>
+        {news.link ? (
+          <a 
+            href={news.link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-primary hover:underline"
+          >
+            <ExternalLink className="h-3 w-3" />
+            {news.is_clickable && (
+              <span className="text-xs bg-primary/10 px-1.5 py-0.5 rounded">Clicável</span>
+            )}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">-</span>
+        )}
       </TableCell>
       <TableCell>{news.duration}</TableCell>
       <TableCell>
