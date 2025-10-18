@@ -14,11 +14,11 @@ const NavMenu = () => {
   const publicLinks = [
     { path: '/', icon: Home, label: 'Início' },
     { path: '/horarios', icon: Calendar, label: 'Horários' },
-    { path: '/professores', icon: Users, label: 'Professores' },
+    { path: '/professores', icon: Users, label: 'Docentes' },
   ];
 
   const privateLinks = [
-    { path: '/professors', icon: Users, label: 'Professores' },
+    { path: '/professors', icon: Users, label: 'Cadastro de Professores' },
     { path: '/classes', icon: School, label: 'Aulas' },
     { path: '/news', icon: Newspaper, label: 'Notícias' },
     { path: '/links', icon: QrCode, label: 'Links QR' },
