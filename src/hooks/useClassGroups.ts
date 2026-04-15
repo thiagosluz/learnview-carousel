@@ -1,14 +1,12 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Class } from '@/types';
 
 export const useClassGroups = (classes: Class[]) => {
-  const [classGroups, setClassGroups] = useState<Class[][]>([]);
   const [currentClasses, setCurrentClasses] = useState<number[]>([]);
 
   // Group classes into arrays of 3
-  useEffect(() => {
-    const groups = classes.reduce((groups: Class[][], item, index) => {
+  const classGroups = useMemo(() => {
+    return classes.reduce((groups: Class[][], item, index) => {
       const groupIndex = Math.floor(index / 3);
       if (!groups[groupIndex]) {
         groups[groupIndex] = [];
@@ -16,8 +14,6 @@ export const useClassGroups = (classes: Class[]) => {
       groups[groupIndex].push(item);
       return groups;
     }, []);
-    
-    setClassGroups(groups);
   }, [classes]);
 
   // Track current active classes

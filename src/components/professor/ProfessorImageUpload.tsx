@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface ProfessorImageUploadProps {
   previewUrl: string;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  fieldProps?: any;
+  fieldProps?: Record<string, unknown>;
 }
 
 export const ProfessorImageUpload = ({ 

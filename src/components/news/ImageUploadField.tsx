@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface ImageUploadFieldProps {
   previewUrl: string;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  fieldProps: any;
+  fieldProps: Record<string, unknown>;
 }
 
 export const ImageUploadField = ({ 

@@ -81,7 +81,7 @@ interface ClassListFiltersProps {
   labFilter: string[];
   courseFilter: string;
   periodFilter: string;
-  onFilterChange: (value: string | string[], setFilter: (value: any) => void) => void;
+  onFilterChange: (value: string | string[], setFilter: (value: string | string[]) => void) => void;
   setDayFilter: (value: string) => void;
   setTimeFilter: (value: string) => void;
   setProfessorFilter: (value: string) => void;

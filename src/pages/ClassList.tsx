@@ -62,7 +62,7 @@ const ClassList = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentClasses = filteredClasses.slice(startIndex, endIndex);
 
-  const handleFilterChange = (value: string | string[], setFilter: (value: any) => void) => {
+  const handleFilterChange = (value: string | string[], setFilter: (value: string | string[]) => void) => {
     setFilter(value);
     setCurrentPage(1);
   };

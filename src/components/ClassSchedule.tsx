@@ -8,26 +8,25 @@ interface ClassScheduleProps {
   date: string;
 }
 
+const ViewAllButton = () => (
+  <a href="/horarios">
+    <Button
+      variant="outline"
+      size="sm"
+      className="text-primary hover:text-primary/80"
+    >
+      <span>Horário Completo</span>
+      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </Button>
+  </a>
+);
+
 const ClassSchedule = ({ classes, date }: ClassScheduleProps) => {
   const { classGroups, currentClasses } = useClassGroups(classes);
   
-  // Extrair o período do texto da data (última parte após o hífen)
   const period = date.split('-').pop()?.trim() || '';
-
-  const ViewAllButton = () => (
-    <a href="/horarios">
-      <Button
-        variant="outline"
-        size="sm"
-        className="text-primary hover:text-primary/80"
-      >
-        <span>Horário Completo</span>
-        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </Button>
-    </a>
-  );
 
   if (classes.length === 0) {
     return (

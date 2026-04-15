@@ -11,19 +11,29 @@ const ProfessorDetails = () => {
   const [disciplinas, setDisciplinas] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [prevId, setPrevId] = useState(id);
+
+  if (id !== prevId) {
+    setPrevId(id);
+    setLoading(true);
+    setProfessor(null);
+    setDisciplinas([]);
+    setError(null);
+  }
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
+
     fetchProfessor(id)
       .then((data) => {
         setProfessor(data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError('Professor não encontrado.');
         setLoading(false);
       });
+
     // Buscar disciplinas ministradas
     supabase
       .from('classes')
@@ -32,7 +42,7 @@ const ProfessorDetails = () => {
       .then(({ data, error }) => {
         if (!error && data) {
           // Remover duplicatas
-          const uniqueSubjects = Array.from(new Set(data.map((c: any) => c.subject)));
+          const uniqueSubjects = Array.from(new Set(data.map((c) => c.subject)));
           setDisciplinas(uniqueSubjects);
         }
       });

@@ -16,6 +16,17 @@ export type ChartConfig = {
   )
 }
 
+type ChartPayloadItem = {
+  dataKey?: string | number
+  name?: string
+  value?: number | string | (number | string)[]
+  payload?: Record<string, unknown>
+  color?: string
+  fill?: string
+  graphicalItemId?: string
+  [key: string]: unknown
+}
+
 type ChartContextProps = {
   config: ChartConfig
 }
@@ -109,12 +120,21 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
       labelKey?: string
-      payload?: any
-      label?: any
-      labelFormatter?: any
-      formatter?: any
-      color?: any
-      active?: any
+      payload?: ChartPayloadItem[]
+      label?: React.ReactNode
+      labelFormatter?: (
+        label: React.ReactNode,
+        payload: ChartPayloadItem[]
+      ) => React.ReactNode
+      formatter?: (
+        value: unknown,
+        name: unknown,
+        item: ChartPayloadItem,
+        index: number,
+        payload: unknown
+      ) => React.ReactNode
+      color?: string
+      active?: boolean
       labelClassName?: string
     }
 >(
@@ -133,7 +153,7 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
-    } = {} as any,
+    } = {},
     ref
   ) => {
     const { config } = useChart()
@@ -268,7 +288,7 @@ const ChartLegendContent = React.forwardRef<
   React.ComponentProps<"div"> & {
       hideIcon?: boolean
       nameKey?: string
-      payload?: any
+      payload?: ChartPayloadItem[]
       verticalAlign?: "top" | "bottom"
     }
 >(
@@ -291,13 +311,13 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
-        {payload.map((item) => {
+        {payload.map((item, index) => {
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
             <div
-              key={item.value}
+              key={item.value?.toString() || index}
               className={cn(
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
               )}

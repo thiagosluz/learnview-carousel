@@ -27,7 +27,7 @@ export const fetchSchedule = async (): Promise<Class[]> => {
   const formattedClasses = (data || []).map(cls => {
     const formatted = {
       ...cls,
-      professor: cls.professor as any,
+      professor: cls.professor as unknown as Professor,
       start_time: cls.start_time.slice(0, 5),
       end_time: cls.end_time.slice(0, 5),
       day_of_week: cls.day_of_week,

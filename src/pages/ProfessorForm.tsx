@@ -98,7 +98,7 @@ const ProfessorForm = () => {
           name: data.name,
           photo: data.photo,
           minicurriculo: data.minicurriculo,
-        } as any);
+        });
         toast({
           title: "Professor atualizado",
           description: "Os dados do professor foram atualizados com sucesso.",
@@ -108,7 +108,7 @@ const ProfessorForm = () => {
           name: data.name,
           photo: data.photo,
           minicurriculo: data.minicurriculo,
-        } as any);
+        });
         toast({
           title: "Professor cadastrado",
           description: "O professor foi cadastrado com sucesso.",
